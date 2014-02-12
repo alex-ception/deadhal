@@ -14,13 +14,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="fr.upem.android.deadhal.MainActivity"
-            android:label="@string/app_name" >
+            android:name="fr.upem.android.deadhal.MenuMainActivity"
+            android:label="@string/menu_main_textview_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="fr.upem.android.deadhal.MenuBuilderActivity"
+            android:label="@string/menu_builder_textview_title" >
         </activity>
     </application>
 
