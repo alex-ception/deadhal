@@ -7,13 +7,7 @@
     <string name="menu_main_button_builder">Builder</string>
     <string name="menu_main_button_quit">Quit</string>
 
-    <string name="menu_builder_title">Builder</string>
-    <string name="menu_builder_button_new">New</string>
-    <string name="menu_builder_button_load">Load</string>
-    <string name="menu_builder_button_main_menu">Main menu</string>
-
-    <string name="builder_title">BuilderActivity</string>
-
+    <string name="builder_title">Builder</string>
     <string name="builder_menu_room">Room</string>
     <string name="builder_menu_interest">Interest</string>
     <string name="builder_menu_io">Input/Output</string>

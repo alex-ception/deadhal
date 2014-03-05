@@ -23,10 +23,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.upem.android.deadhal.MenuBuilderActivity"
-            android:label="@string/menu_builder_title" >
-        </activity>
-        <activity
             android:name="fr.upem.android.deadhal.BuilderActivity"
             android:label="@string/builder_title" >
         </activity>
