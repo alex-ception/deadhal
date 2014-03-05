@@ -12,9 +12,27 @@
         android:title="@string/builder_menu_interest"
         />
     <item
-        android:id="@+id/action_"
+        android:id="@+id/action_io"
         android:orderInCategory="300"
         android:showAsAction="withText"
         android:title="@string/builder_menu_io"
         />
+   	<item
+   	    android:id="@+id/action_save"
+   	    android:orderInCategory="400"
+   	    android:showAsAction="withText"
+   	    android:title="@string/builder_menu_save"
+   	    />
+   	<item
+   	    android:id="@+id/action_load"
+   	    android:orderInCategory="500"
+   	    android:showAsAction="withText"
+   	    android:title="@string/builder_menu_load"
+   	    />
+   	<item
+   	    android:id="@+id/action_menu"
+   	    android:orderInCategory="600"
+   	    android:showAsAction="withText"
+   	    android:title="@string/builder_menu_menu"
+   	    />
 </menu>

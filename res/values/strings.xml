@@ -11,4 +11,7 @@
     <string name="builder_menu_room">Room</string>
     <string name="builder_menu_interest">Interest</string>
     <string name="builder_menu_io">Input/Output</string>
+    <string name="builder_menu_save">Save</string>
+    <string name="builder_menu_load">Load</string>
+    <string name="builder_menu_main">Main menu</string>
 </resources>
