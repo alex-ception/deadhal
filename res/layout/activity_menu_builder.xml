@@ -8,21 +8,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MenuBuilderActivity" >
 
-    <TextView
-        android:id="@+id/menu_builder_textview_title"
-        android:text="@string/menu_builder_textview_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        />
-
     <Button
         android:id="@+id/menu_builder_button_new"
         android:text="@string/menu_builder_button_new"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/menu_builder_textview_title"
         android:onClick="buttonsOnClick"
         />
 

@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="fr.upem.android.deadhal.MenuMainActivity"
-            android:label="@string/menu_main_textview_title" >
+            android:label="@string/menu_main_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,11 @@
         </activity>
         <activity
             android:name="fr.upem.android.deadhal.MenuBuilderActivity"
-            android:label="@string/menu_builder_textview_title" >
+            android:label="@string/menu_builder_title" >
+        </activity>
+        <activity
+            android:name="fr.upem.android.deadhal.BuilderActivity"
+            android:label="@string/builder_title" >
         </activity>
     </application>
 
