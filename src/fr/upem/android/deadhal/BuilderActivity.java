@@ -1,7 +1,7 @@
 package fr.upem.android.deadhal;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class BuilderActivity extends Activity
@@ -11,7 +11,11 @@ public class BuilderActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_builder);
+        
+        BuilderView mView = new BuilderView(this);
+		setContentView(mView);
+		
+        //setContentView(R.layout.activity_builder);
     }
 
     @Override
@@ -21,5 +25,6 @@ public class BuilderActivity extends Activity
         getMenuInflater().inflate(R.menu.builder, menu);
         return true;
     }
+    
 
 }

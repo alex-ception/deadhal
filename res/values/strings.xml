@@ -13,5 +13,5 @@
     <string name="builder_menu_io">Input/Output</string>
     <string name="builder_menu_save">Save</string>
     <string name="builder_menu_load">Load</string>
-    <string name="builder_menu_main">Main menu</string>
+    <string name="builder_menu_menu">Main menu</string>
 </resources>
