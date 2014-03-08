@@ -167,4 +167,20 @@ public class Room
     
         return this;
     }
+    
+    public int getXLeft() {
+		return getX()-(getHeight()/2);
+	}
+
+	public int getXRight() {
+		return getX()+(getHeight()/2);
+	}
+
+	public int getYTop() {
+		return getY()-(getWidth()/2);
+	}
+
+	public int getYBottom() {
+		return getY()+(getWidth()/2);
+	}
 }
