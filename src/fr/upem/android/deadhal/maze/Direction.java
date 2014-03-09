@@ -1,6 +1,6 @@
 package fr.upem.android.deadhal.maze;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
 public abstract class Direction
 {
@@ -9,33 +9,33 @@ public abstract class Direction
     public static final int WEST    = 2;
     public static final int EAST    = 4;
 
-    private final ConcurrentHashMap<String, Room> north;
-    private final ConcurrentHashMap<String, Room> south;
-    private final ConcurrentHashMap<String, Room> west;
-    private final ConcurrentHashMap<String, Room> east;
+    private final ArrayList<LinkedRoom> north;
+    private final ArrayList<LinkedRoom> south;
+    private final ArrayList<LinkedRoom> west;
+    private final ArrayList<LinkedRoom> east;
 
     public Direction()
     {
-        this.north  = new ConcurrentHashMap<String, Room>();
-        this.south  = new ConcurrentHashMap<String, Room>();
-        this.west   = new ConcurrentHashMap<String, Room>();
-        this.east   = new ConcurrentHashMap<String, Room>();
+        this.north  = new ArrayList<LinkedRoom>();
+        this.south  = new ArrayList<LinkedRoom>();
+        this.west   = new ArrayList<LinkedRoom>();
+        this.east   = new ArrayList<LinkedRoom>();
     }
 
-    public Direction add(int direction, Room room)
+    public Direction add(int direction, LinkedRoom room)
     {
         switch (direction) {
             case Direction.NORTH:
-                this.north.putIfAbsent(room.getId(), room);
+                this.north.add(room);
                 break;
             case Direction.SOUTH:
-                this.south.putIfAbsent(room.getId(), room);
+                this.south.add(room);
                 break;
             case Direction.WEST:
-                this.west.putIfAbsent(room.getId(), room);
+                this.west.add(room);
                 break;
             case Direction.EAST:
-                this.east.putIfAbsent(room.getId(), room);
+                this.east.add(room);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid direction " + direction);
@@ -44,27 +44,27 @@ public abstract class Direction
         return this;
     }
 
-    public Direction addNorth(Room room)
+    public Direction addNorth(LinkedRoom room)
     {
         return this.add(Direction.NORTH, room);
     }
 
-    public Direction addSouth(Room room)
+    public Direction addSouth(LinkedRoom room)
     {
         return this.add(Direction.SOUTH, room);
     }
 
-    public Direction addWest(Room room)
+    public Direction addWest(LinkedRoom room)
     {
         return this.add(Direction.WEST, room);
     }
 
-    public Direction addEast(Room room)
+    public Direction addEast(LinkedRoom room)
     {
         return this.add(Direction.EAST, room);
     }
 
-    public Direction remove(int direction, Room room)
+    public Direction remove(int direction, LinkedRoom room)
     {
         switch (direction) {
             case Direction.NORTH:
@@ -86,27 +86,27 @@ public abstract class Direction
         return this;
     }
 
-    public Direction removeNorth(Room room)
+    public Direction removeNorth(LinkedRoom room)
     {
         return this.remove(Direction.NORTH, room);
     }
 
-    public Direction removeSouth(Room room)
+    public Direction removeSouth(LinkedRoom room)
     {
         return this.remove(Direction.SOUTH, room);
     }
 
-    public Direction removeWest(Room room)
+    public Direction removeWest(LinkedRoom room)
     {
         return this.remove(Direction.WEST, room);
     }
 
-    public Direction removeEast(Room room)
+    public Direction removeEast(LinkedRoom room)
     {
         return this.remove(Direction.EAST, room);
     }
 
-    public ConcurrentHashMap<String, Room> get(int direction, Room room)
+    public ArrayList<LinkedRoom> get(int direction, Room room)
     {
         switch (direction) {
             case Direction.NORTH:
@@ -122,22 +122,22 @@ public abstract class Direction
         }
     }
 
-    public ConcurrentHashMap<String, Room> getNorth()
+    public ArrayList<LinkedRoom> getNorth()
     {
         return this.north;
     }
 
-    public ConcurrentHashMap<String, Room> getSouth()
+    public ArrayList<LinkedRoom> getSouth()
     {
         return this.south;
     }
 
-    public ConcurrentHashMap<String, Room> getWest()
+    public ArrayList<LinkedRoom> getWest()
     {
         return this.west;
     }
 
-    public ConcurrentHashMap<String, Room> getEast()
+    public ArrayList<LinkedRoom> getEast()
     {
         return this.east;
     }
