@@ -1,7 +1,5 @@
 package fr.upem.android.deadhal.maze;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 public class Room
 {
     /**
@@ -42,17 +40,17 @@ public class Room
     /**
      * 
      */
-    private final ConcurrentHashMap<String, Room> inputs;
+    private final Input inputs;
     
     /**
      * 
      */
-    private final ConcurrentHashMap<String, Room> outputs;
+    private final Output outputs;
     
     public Room(String id)
     {
-        this.inputs    = new ConcurrentHashMap<String, Room>();
-        this.outputs   = new ConcurrentHashMap<String, Room>();
+        this.inputs    = new Input();
+        this.outputs   = new Output();
         this.id        = id;
     }
     
@@ -140,31 +138,13 @@ public class Room
         return this;
     }
     
-    public Room addInput(Room room)
+    public Input getInputs()
     {
-        this.inputs.putIfAbsent(room.getId(), room);
-        
-        return this;
+        return this.inputs;
     }
     
-    public Room addOutput(Room room)
+    public Output getOutputs()
     {
-        this.outputs.putIfAbsent(room.getId(), room);
-    
-        return this;
-    }
-    
-    public Room removeInput(Room room)
-    {
-        this.inputs.remove(room.getId());
-    
-        return this;
-    }
-    
-    public Room removeOutput(Room room)
-    {
-        this.outputs.remove(room.getId());
-    
-        return this;
+        return this.outputs;
     }
 }

@@ -27,7 +27,7 @@ public class MenuMainActivity extends Activity
 	{
 	    switch (view.getId()) {
 	        case R.id.menu_main_button_builder:
-	            Intent builder = new Intent(view.getContext(), BuilderActivity.class);
+	            Intent builder = new Intent(this, BuilderActivity.class);
 	            this.startActivityForResult(builder, 0);
 	            break;
 	        case R.id.menu_main_button_quit:
