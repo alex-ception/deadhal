@@ -9,6 +9,11 @@ public abstract class Direction
     public static final int WEST    = 2;
     public static final int EAST    = 4;
 
+    public static final String NORTH_STR   = "north";
+    public static final String SOUTH_STR   = "south";
+    public static final String WEST_STR    = "west";
+    public static final String EAST_STR    = "east";
+
     private final ArrayList<LinkedRoom> north;
     private final ArrayList<LinkedRoom> south;
     private final ArrayList<LinkedRoom> west;
