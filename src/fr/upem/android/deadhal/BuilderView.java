@@ -213,7 +213,10 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			canvas.drawText(r.getName(), centerx, centery, paintRoomName);
 			paintRoomInterest.setTextSize(r.getInterestFontSize());
 			paintRoomName.setTextAlign(Align.LEFT);
-			canvas.drawText(r.getName(), xleft, ytop + r.getInterestFontSize(), paintRoomInterest);
+			canvas.drawText(r.getName(), xleft, ytop + r.getInterestFontSize(), paintRoomInterest);			
+		}
+		
+		for (Room r : rooms) {
 
 			canvas.restore();
 			for (LinkedRoom input : r.getInputs().getEast()) {
@@ -274,7 +277,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
 				canvas.restore();
 			}
-			
 		}
 		/*
 		 * Bitmap myicon = BitmapFactory.decodeResource(getResources(),
@@ -419,7 +421,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 							(rooms.get(id).getInterestFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
 				}
-			} else {
+			} /*else {
 				for (Room r : rooms) {
 					r.setHeight((int) (r.getHeight()
 							* ((endSpan * 100) / beginSpan) / 100));
@@ -432,7 +434,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 							(r.getInterestFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
 				}
-			}
+			}*/
 
 		}
 
