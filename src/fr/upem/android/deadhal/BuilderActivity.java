@@ -1,7 +1,6 @@
 package fr.upem.android.deadhal;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
-import fr.upem.android.deadhal.maze.XMLReader;
 import fr.upem.android.deadhal.maze.XMLWriter;
 import android.os.Bundle;
 import android.app.DialogFragment;
