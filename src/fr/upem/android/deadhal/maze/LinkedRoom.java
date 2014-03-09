@@ -28,4 +28,8 @@ public class LinkedRoom
                 throw new IllegalArgumentException("Undefined direction");
         }
     }
+    
+    public Room getRoom (){
+    	return room;
+    }
 }

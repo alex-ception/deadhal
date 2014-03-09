@@ -1,5 +1,7 @@
 package fr.upem.android.deadhal.maze;
 
+import android.graphics.Point;
+
 public class Room
 {
     /**
@@ -212,4 +214,6 @@ public class Room
 		}
 		return false;
 	}
+	
+	
 }
