@@ -14,6 +14,18 @@ public class Room
      */
     private String name;
     
+
+	/**
+     * 
+     */
+    private float nameFontSize;
+    
+    
+    /**
+     * 
+     */
+    private float InterestFontSize;
+    
     /**
      * 
      */
@@ -37,7 +49,7 @@ public class Room
     /**
      * 
      */
-    private int rotation;
+    private float rotation;
     
     /**
      * 
@@ -54,6 +66,8 @@ public class Room
         this.inputs    = new ConcurrentHashMap<String, Room>();
         this.outputs   = new ConcurrentHashMap<String, Room>();
         this.id        = id;
+        this.nameFontSize = 25;
+        this.InterestFontSize = 20;
     }
     
     public Room(String id, String name)
@@ -92,10 +106,18 @@ public class Room
         return this.height;
     }
     
-    public int getRotation()
+    public float getRotation()
     {
         return this.rotation;
     }
+    
+    public float getNameFontSize() {
+		return this.nameFontSize;
+	}
+
+	public float getInterestFontSize() {
+		return this.InterestFontSize;
+	}
     
     public Room setName(String name)
     {
@@ -133,12 +155,24 @@ public class Room
         return this;
     }
     
-    public Room setRotation(int rotation)
+    public Room setRotation(float rotation)
     {
         this.rotation = rotation;
     
         return this;
     }
+    
+    public Room setNameFontSize(float nameFontSize) {
+		this.nameFontSize = nameFontSize;
+		
+		return this;
+	}
+    
+    public Room setInterestFontSize(float interestFontSize) {
+		InterestFontSize = interestFontSize;
+		
+		return this;
+	}
     
     public Room addInput(Room room)
     {
@@ -167,7 +201,7 @@ public class Room
     
         return this;
     }
-    
+   
     public int getXLeft() {
 		return getX()-(getHeight()/2);
 	}
@@ -183,4 +217,21 @@ public class Room
 	public int getYBottom() {
 		return getY()+(getWidth()/2);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Room){
+			if (this.getId()==((Room)o).getId()&&
+					this.getName()==((Room)o).getName()&&
+					this.getWidth()==((Room)o).getWidth()&&
+					this.getHeight()==((Room)o).getHeight()&&
+					this.getX()==((Room)o).getX()&&
+					this.getY()==((Room)o).getY()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 }
