@@ -43,7 +43,29 @@ public abstract class Direction
 
         return this;
     }
-    
+
+    public Direction remove(int direction, Room room)
+    {
+        switch (direction) {
+            case Direction.NORTH:
+                this.north.remove(room);
+                break;
+            case Direction.SOUTH:
+                this.south.remove(room);
+                break;
+            case Direction.WEST:
+                this.west.remove(room);
+                break;
+            case Direction.EAST:
+                this.east.remove(room);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid direction " + direction);
+        }
+
+        return this;
+    }
+
     public Direction addNorth(Room room)
     {
         return this.add(Direction.NORTH, room);
@@ -62,5 +84,45 @@ public abstract class Direction
     public Direction addEast(Room room)
     {
         return this.add(Direction.EAST, room);
+    }
+
+    public Direction removeNorth(Room room)
+    {
+        return this.remove(Direction.NORTH, room);
+    }
+
+    public Direction removeSouth(Room room)
+    {
+        return this.remove(Direction.SOUTH, room);
+    }
+
+    public Direction removeWest(Room room)
+    {
+        return this.remove(Direction.WEST, room);
+    }
+
+    public Direction removeEast(Room room)
+    {
+        return this.remove(Direction.EAST, room);
+    }
+
+    public ConcurrentHashMap<String, Room> getNorth()
+    {
+        return this.north;
+    }
+
+    public ConcurrentHashMap<String, Room> getSouth()
+    {
+        return this.south;
+    }
+
+    public ConcurrentHashMap<String, Room> getWest()
+    {
+        return this.west;
+    }
+
+    public ConcurrentHashMap<String, Room> getEast()
+    {
+        return this.east;
     }
 }
