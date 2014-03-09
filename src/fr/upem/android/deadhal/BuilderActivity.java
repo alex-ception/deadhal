@@ -6,6 +6,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import android.app.Activity;
+import android.graphics.Color;
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -15,13 +30,11 @@ import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.XMLReader;
 import fr.upem.android.deadhal.maze.XMLWriter;
-import android.os.Bundle;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener
@@ -35,15 +48,22 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         setContentView(R.layout.activity_builder);
 
         this.maze = new Maze();
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
+        Switch sw = new Switch(getApplicationContext());
+        sw.setText("Rotation : ");
+        sw.setTextColor(Color.BLACK);
+        BuilderView mView = new BuilderView(this,sw);
+        linearLayout.addView(sw);
+        linearLayout.addView(mView);
+        
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.builder, menu);
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.builder, menu);
+		return true;
+	}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

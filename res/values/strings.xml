@@ -18,4 +18,6 @@
    	<string name="builder_save_level_name">Level name</string>
    	<string name="builder_save_level_ok">Ok</string>
    	<string name="builder_save_level_nok">Cancel</string>
+
+    <string name="Rotate">Rotation :</string>
 </resources>
