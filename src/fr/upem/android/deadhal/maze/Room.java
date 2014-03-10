@@ -1,5 +1,7 @@
 package fr.upem.android.deadhal.maze;
 
+import java.util.UUID;
+
 public class Room
 {
     /**
@@ -57,18 +59,13 @@ public class Room
      */
     private Interest interest;
 
-    public Room(String id)
+    public Room(String name)
     {
         this.inputs     = new Input();
         this.outputs    = new Output();
-        this.id         = id;
+        this.id         = UUID.randomUUID().toString();
+        this.name       = name;
         this.nameFontSize = 25;
-    }
-    
-    public Room(String id, String name)
-    {
-        this(id);
-        this.name = name;
     }
     
     public String getId()

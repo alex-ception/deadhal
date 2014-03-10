@@ -18,9 +18,17 @@
    	<string name="builder_save_level_name">Level name</string>
    	<string name="builder_save_level_ok">OK</string>
    	<string name="builder_save_level_nok">Cancel</string>
-
+   	<string name="builder_save_level_error">Level was not saved</string>
+   	
    	<string name="builder_load_level_ok">OK</string>
    	<string name="builder_load_level_nok">Cancel</string>
+   	<string name="builder_load_level_error">Level was not loaded</string>
    	
+   	<string name="builder_room_ok">OK</string>
+   	<string name="builder_room_nok">Cancel</string>
+   	<string name="builder_room_error">Room was not loaded</string>
+
+   	<string name="builder_io_not_enough_room">Two room needed to add an IO</string>
+
    	<string name="Rotate">Rotation :</string>
 </resources>

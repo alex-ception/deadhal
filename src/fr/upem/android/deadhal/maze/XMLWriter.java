@@ -69,7 +69,7 @@ public class XMLWriter
 
         for (Room room : this.maze.getRooms().values()) {
             this.buildRoom(room, roomsNode);
-            this.buildInterests(room, interestsNode);
+//            this.buildInterests(room, interestsNode);
         }
 
         root.appendChild(roomsNode);
