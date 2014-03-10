@@ -1,7 +1,6 @@
 package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Room;
@@ -10,31 +9,17 @@ import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Path.Direction;
-import android.graphics.Picture;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
-import android.view.OrientationListener;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 @SuppressLint("WrongCall")
 public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
