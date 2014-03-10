@@ -12,17 +12,10 @@ public class Room
      */
     private String name;
     
-
 	/**
      * 
      */
     private float nameFontSize;
-    
-    
-    /**
-     * 
-     */
-    private float InterestFontSize;
     
     /**
      * 
@@ -58,14 +51,18 @@ public class Room
      * 
      */
     private final Output outputs;
-    
+
+    /**
+     * 
+     */
+    private Interest interest;
+
     public Room(String id)
     {
-        this.inputs    = new Input();
-        this.outputs   = new Output();
-        this.id        = id;
+        this.inputs     = new Input();
+        this.outputs    = new Output();
+        this.id         = id;
         this.nameFontSize = 25;
-        this.InterestFontSize = 20;
     }
     
     public Room(String id, String name)
@@ -103,18 +100,20 @@ public class Room
     {
         return this.height;
     }
-    
+
     public float getRotation()
     {
         return this.rotation;
     }
+
+    public Interest getInterest()
+    {
+        return this.interest;
+        
+    }
     
     public float getNameFontSize() {
 		return this.nameFontSize;
-	}
-
-	public float getInterestFontSize() {
-		return this.InterestFontSize;
 	}
     
     public Room setName(String name)
@@ -123,8 +122,7 @@ public class Room
     
         return this;
     }
-    
-    
+
     public Room setX(int x)
     {
         this.x = x;
@@ -159,15 +157,16 @@ public class Room
     
         return this;
     }
-    
-    public Room setNameFontSize(float nameFontSize) {
-        this.nameFontSize = nameFontSize;
-        
+
+    public Room setInterest(Interest interest)
+    {
+        this.interest = interest;
+
         return this;
     }
     
-    public Room setInterestFontSize(float interestFontSize) {
-        InterestFontSize = interestFontSize;
+    public Room setNameFontSize(float nameFontSize) {
+        this.nameFontSize = nameFontSize;
         
         return this;
     }

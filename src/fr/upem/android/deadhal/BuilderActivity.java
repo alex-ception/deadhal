@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import fr.upem.android.deadhal.dialog.LoadDialogFragment;
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.XMLWriter;
@@ -25,7 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener
+public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener, LoadDialogFragment.LoadDialogListener
 {
     private Maze maze;
 
@@ -58,15 +59,14 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     {
         switch(item.getItemId()) {
             case R.id.action_room:
+                this.addRoom();
                 return true;
             case R.id.action_interest:
                 return true;
             case R.id.action_io:
                 return true;
             case R.id.action_save:
-                Log.v("DH", "saving");
                 this.saveAction();
-                Log.v("DH", "saved");
                 return true;
             case R.id.action_load:
                 try {
@@ -92,6 +92,10 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         }
     }
 
+    public void addRoom()
+    {
+    }
+
     public void saveAction()
     {
         DialogFragment saveDialog = new SaveDialogFragment();
@@ -110,7 +114,9 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         try {
             XMLWriter xmlWriter = new XMLWriter(this.maze);
             FileOutputStream fp = this.openFileOutput(xmlWriter.getFileName(), Context.MODE_PRIVATE);
-            fp.write(xmlWriter.getContent());
+            Log.e("DH", "Save to " + xmlWriter.getFileName());
+            Log.e("DH", xmlWriter.getContent());
+            fp.write(xmlWriter.getContent().getBytes());
             fp.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,7 +130,14 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 
     public void loadAction() throws IOException, ParserConfigurationException, SAXException
     {
-        InputStream fp = this.openFileInput("maze.xml");
+        DialogFragment loadDialog = new LoadDialogFragment();
+        loadDialog.show(this.getFragmentManager(), "LoadDialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName) throws IOException
+    {
+        InputStream fp = this.openFileInput(levelName);
         if (fp == null)
             return;
 
@@ -136,7 +149,13 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         while ((temp = br.readLine()) != null)
             content.append(temp);
 
-        Log.v("DH", content.toString());
-//        XMLReader xmlReader = new XMLReader(content.toString());
+        Log.e("DH", "Load from " + levelName);
+        Log.e("DH", content.toString());
+//        XMLReader xmlReader = new XMLReader(content.toString());*/
+    }
+
+    @Override
+    public void onDialogNegativeClick(LoadDialogFragment dialog)
+    {
     }
 }

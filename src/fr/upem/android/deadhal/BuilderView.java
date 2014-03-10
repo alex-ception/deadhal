@@ -31,6 +31,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("WrongCall")
 public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
@@ -68,12 +69,12 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				new RotateListener());
 
 		rooms = new ArrayList<Room>();
-		Room r1 = new Room("room 1 ", "room 1 ");
+/*		Room r1 = new Room("room 1 ", "room 1 ");
 		Room r2 = new Room("salle de réception", "salle de réception");
 		r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
 		r2.setX(200).setY(200).setWidth(500).setHeight(200);
 		rooms.add(r1);
-		rooms.add(r2);
+		rooms.add(r2);*/
 		selectedRoom = null;
 		RotateSwitch = sw;
 	}
@@ -196,9 +197,9 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			paintRoomName.setTextSize(r.getNameFontSize());
 			paintRoomName.setTextAlign(Align.CENTER);
 			canvas.drawText(r.getName(), centerx, centery, paintRoomName);
-			paintRoomInterest.setTextSize(r.getInterestFontSize());
+			paintRoomInterest.setTextSize(r.getInterest().getFontSize());
 			paintRoomName.setTextAlign(Align.LEFT);
-			canvas.drawText(r.getName(), xleft, ytop + r.getInterestFontSize(), paintRoomInterest);
+			canvas.drawText(r.getName(), xleft, ytop + r.getInterest().getFontSize(), paintRoomInterest);
 
 			canvas.restore();
 		}
@@ -341,8 +342,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 					rooms.get(id).setNameFontSize(
 							(rooms.get(id).getNameFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
-					rooms.get(id).setInterestFontSize(
-							(rooms.get(id).getInterestFontSize()
+					rooms.get(id).getInterest().setFontSize(
+							(rooms.get(id).getInterest().getFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
 				}
 			} else {
@@ -354,8 +355,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 					r.setNameFontSize(
 							(r.getNameFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
-					r.setInterestFontSize(
-							(r.getInterestFontSize()
+					r.getInterest().setFontSize(
+							(r.getInterest().getFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
 				}
 			}

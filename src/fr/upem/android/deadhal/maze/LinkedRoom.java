@@ -28,4 +28,25 @@ public class LinkedRoom
                 throw new IllegalArgumentException("Undefined direction");
         }
     }
+
+    public Room getRoom()
+    {
+        return this.room;
+    }
+
+    public String getDirectionString()
+    {
+        switch (direction) {
+            case Direction.NORTH:
+                return Direction.NORTH_STR;
+            case Direction.SOUTH:
+                return Direction.SOUTH_STR;
+            case Direction.WEST:
+                return Direction.WEST_STR;
+            case Direction.EAST:
+                return Direction.EAST_STR;
+            default:
+                throw new IllegalArgumentException("Undefined direction");
+        }
+    }
 }

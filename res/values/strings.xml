@@ -16,8 +16,11 @@
     <string name="builder_menu_menu">Main menu</string>
 
    	<string name="builder_save_level_name">Level name</string>
-   	<string name="builder_save_level_ok">Ok</string>
+   	<string name="builder_save_level_ok">OK</string>
    	<string name="builder_save_level_nok">Cancel</string>
 
-    <string name="Rotate">Rotation :</string>
+   	<string name="builder_load_level_ok">OK</string>
+   	<string name="builder_load_level_nok">Cancel</string>
+   	
+   	<string name="Rotate">Rotation :</string>
 </resources>
