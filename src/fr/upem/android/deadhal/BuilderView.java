@@ -68,7 +68,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this);
 		mThread = new DrawingThread();
-
+		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		mRotateDetector = new RotateGestureDetector(context,
 				new RotateListener());

@@ -41,7 +41,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         Switch sw = new Switch(getApplicationContext());
         sw.setText("Rotation : ");
         sw.setTextColor(Color.BLACK);
-        BuilderView mView = new BuilderView(this,sw);
+        BuilderView mView = new BuilderView(this,sw,maze);
         linearLayout.addView(sw);
         linearLayout.addView(mView);
         
