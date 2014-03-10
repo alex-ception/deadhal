@@ -51,11 +51,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 
         this.maze = new Maze();
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
-        Switch sw = new Switch(getApplicationContext());
-        sw.setText("Rotation : ");
-        sw.setTextColor(Color.BLACK);
-        BuilderView mView = new BuilderView(this,sw,maze);
-        linearLayout.addView(sw);
+        BuilderView mView = new BuilderView(this);
         linearLayout.addView(mView);
         
     }
@@ -290,4 +286,8 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 
         
     }
+
+	public Maze getMaze() {
+		return this.maze;
+	}
 }

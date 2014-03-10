@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.upem.android.deadhal.maze.LinkedRoom;
+import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.Rooms;
 import fr.upem.android.deadhal.utils.RotateGestureDetector;
@@ -41,7 +42,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
-	ArrayList<Room> rooms;
+	Maze maze;
 	int beginSpan;
 	int beginSpanX;
 	int beginSpanY;
@@ -63,30 +64,29 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private ScaleGestureDetector mScaleDetector;
 	private RotateGestureDetector mRotateDetector;
 
-	public BuilderView(Context context, Switch sw) {
+	public BuilderView(BuilderActivity context) {
 		super(context);
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this);
 		mThread = new DrawingThread();
-		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		mRotateDetector = new RotateGestureDetector(context,
 				new RotateListener());
 
-		rooms = new ArrayList<Room>();
-/*		Room r1 = new Room("room 1 ", "room 1 ");
-		Room r2 = new Room("salle de réception", "salle de réception");
-		r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
-		r2.setX(200).setY(200).setWidth(500).setHeight(200).setRotation(45);
-		LinkedRoom lr1 = new LinkedRoom(fr.upem.android.deadhal.maze.Direction.WEST, r2);
-		r1.getInputs().addSouth(lr1);
-		r1.getInputs().addNorth(lr1);
-		r1.getInputs().addEast(lr1);
-		r1.getInputs().addWest(lr1);
-		rooms.add(r1);
-		rooms.add(r2);*/
+		/*
+		 * Room r1 = new Room("room 1 ", "room 1 "); Room r2 = new
+		 * Room("salle de réception", "salle de réception");
+		 * r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
+		 * r2.setX(200).setY(200).setWidth(500).setHeight(200).setRotation(45);
+		 * LinkedRoom lr1 = new
+		 * LinkedRoom(fr.upem.android.deadhal.maze.Direction.WEST, r2);
+		 * r1.getInputs().addSouth(lr1); r1.getInputs().addNorth(lr1);
+		 * r1.getInputs().addEast(lr1); r1.getInputs().addWest(lr1);
+		 * rooms.add(r1); rooms.add(r2);
+		 */
 		selectedRoom = null;
-		RotateSwitch = sw;
+		RotateSwitch = (Switch) context.findViewById(R.id.RotateSwitch);
+		this.maze = context.getMaze();
 	}
 
 	@SuppressLint("NewApi")
@@ -117,11 +117,10 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				final float dx = x - mLastTouchX;
 				final float dy = y - mLastTouchY;
 				if (selectedRoom != null) {
-					int id = rooms.indexOf(selectedRoom);
-					rooms.get(id).setX((int) (rooms.get(id).getX() + dx));
-					rooms.get(id).setY((int) (rooms.get(id).getY() + dy));
+					selectedRoom.setX((int) (selectedRoom.getX() + dx));
+					selectedRoom.setY((int) (selectedRoom.getY() + dy));
 				} else {
-					for (Room r : rooms) {
+					for (Room r : maze.getRooms().values()) {
 
 						r.setX((int) (r.getX() + dx));
 						r.setY((int) (r.getY() + dy));
@@ -166,7 +165,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private Room GetSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
-		for (Room r : rooms) {
+		for (Room r : maze.getRooms().values()) {
 			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
 					.getXRight())
 					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
@@ -193,12 +192,12 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		Paint paintRoomInterest = new Paint();
 		paintRoomInterest.setStyle(Paint.Style.FILL);
 		paintRoomInterest.setColor(Color.YELLOW);
-		
+
 		Paint paintInputs = new Paint();
 		paintInputs.setStyle(Paint.Style.FILL);
 		paintInputs.setColor(Color.DKGRAY);
 
-		for (Room r : rooms) {
+		for (Room r : maze.getRooms().values()) {
 			int xleft = r.getXLeft();
 			int ytop = r.getYTop();
 			int xright = r.getXRight();
@@ -212,70 +211,136 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			paintRoomName.setTextSize(r.getNameFontSize());
 			paintRoomName.setTextAlign(Align.CENTER);
 			canvas.drawText(r.getName(), centerx, centery, paintRoomName);
-			paintRoomInterest.setTextSize(r.getInterest().getFontSize());
-			paintRoomName.setTextAlign(Align.LEFT);
-			canvas.drawText(r.getName(), xleft, ytop + r.getInterest().getFontSize(), paintRoomInterest);			
+			if (r.getInterest() != null) {
+				paintRoomInterest.setTextSize(r.getInterest().getFontSize());
+				paintRoomName.setTextAlign(Align.LEFT);
+				canvas.drawText(r.getName(), xleft, ytop
+						+ r.getInterest().getFontSize(), paintRoomInterest);
+			}
 		}
-		
-		for (Room r : rooms) {
+
+		for (Room r : maze.getRooms().values()) {
 
 			canvas.restore();
 			for (LinkedRoom input : r.getInputs().getEast()) {
-				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getXRight(), r.getY())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
+						(new Point(r.getXRight(), r.getY())),
+						new Point(r.getX(), r.getY()), r.getRotation());
 				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
+						linkedPoint.x, linkedPoint.y)), new Point(input
+						.getRoom().getX(), input.getRoom().getY()), input
+						.getRoom().getRotation());
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
+						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
 				canvas.save();
 				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 				canvas.save();
 				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 			}
 			for (LinkedRoom input : r.getInputs().getNorth()) {
-				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getX(), r.getYTop())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
+						(new Point(r.getX(), r.getYTop())), new Point(r.getX(),
+								r.getY()), r.getRotation());
 				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
+						linkedPoint.x, linkedPoint.y)), new Point(input
+						.getRoom().getX(), input.getRoom().getY()), input
+						.getRoom().getRotation());
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
+						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
 				canvas.save();
 				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 				canvas.save();
 				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 			}
 			for (LinkedRoom input : r.getInputs().getSouth()) {
-				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getX(), r.getYBottom())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
+						(new Point(r.getX(), r.getYBottom())),
+						new Point(r.getX(), r.getY()), r.getRotation());
 				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
+						linkedPoint.x, linkedPoint.y)), new Point(input
+						.getRoom().getX(), input.getRoom().getY()), input
+						.getRoom().getRotation());
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
+						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
 				canvas.save();
 				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 				canvas.save();
 				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
-				
-				
+
 			}
 			for (LinkedRoom input : r.getInputs().getWest()) {
-				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getXLeft(), r.getY())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
+						(new Point(r.getXLeft(), r.getY())), new Point(
+								r.getX(), r.getY()), r.getRotation());
 				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
+						linkedPoint.x, linkedPoint.y)), new Point(input
+						.getRoom().getX(), input.getRoom().getY()), input
+						.getRoom().getRotation());
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
+						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
 				canvas.save();
 				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 				canvas.save();
 				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.drawLine(
+						RotatedPointRoom.x,
+						RotatedPointRoom.y,
+						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
+						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
+						paintInputs);
 				canvas.restore();
 			}
 		}
@@ -362,10 +427,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			if (RotateSwitch.isChecked()) {
 				endRotate = detector.getRotationDegreesDelta();
 				if (selectedRoom != null) {
-					int id = rooms.indexOf(selectedRoom);
-					rooms.get(id)
-							.setRotation(
-									(float) (rooms.get(id).getRotation() + (beginRotate - endRotate)));
+					selectedRoom.setRotation((float) (selectedRoom
+							.getRotation() + (beginRotate - endRotate)));
 				}
 			}
 			return true;
@@ -408,34 +471,28 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			endSpanY = (int) detector.getCurrentSpanY();
 			if (selectedRoom != null) {
 				if (!RotateSwitch.isChecked()) {
-					int id = rooms.indexOf(selectedRoom);
-					rooms.get(id).setHeight(
-							(int) (rooms.get(id).getHeight()
-									* ((endSpanX * 100) / beginSpanX) / 100));
-					rooms.get(id).setWidth(
-							(int) (rooms.get(id).getWidth()
-									* ((endSpanY * 100) / beginSpanY) / 100));
-					rooms.get(id).setNameFontSize(
-							(rooms.get(id).getNameFontSize()
+					selectedRoom.setHeight((int) (selectedRoom.getHeight()
+							* ((endSpanX * 100) / beginSpanX) / 100));
+					selectedRoom.setWidth((int) (selectedRoom.getWidth()
+							* ((endSpanY * 100) / beginSpanY) / 100));
+					selectedRoom
+							.setNameFontSize((selectedRoom.getNameFontSize()
 									* ((endSpan * 100) / beginSpan) / 100));
-					rooms.get(id).getInterest().setFontSize(
-							(rooms.get(id).getInterest().getFontSize()
-									* ((endSpan * 100) / beginSpan) / 100));
+					if (selectedRoom.getInterest() != null) {
+						selectedRoom.getInterest().setFontSize(
+								(selectedRoom.getInterest().getFontSize()
+										* ((endSpan * 100) / beginSpan) / 100));
+					}
 				}
-			} /*else {
-				for (Room r : rooms) {
-					r.setHeight((int) (r.getHeight()
-							* ((endSpan * 100) / beginSpan) / 100));
-					r.setWidth((int) (r.getWidth()
-							* ((endSpan * 100) / beginSpan) / 100));
-					r.setNameFontSize(
-							(r.getNameFontSize()
-									* ((endSpan * 100) / beginSpan) / 100));
-					r.getInterest().setFontSize(
-							(r.getInterest().getFontSize()
-									* ((endSpan * 100) / beginSpan) / 100));
-				}
-			}*/
+			} /*
+			 * else { for (Room r : rooms) { r.setHeight((int) (r.getHeight()
+			 * ((endSpan * 100) / beginSpan) / 100)); r.setWidth((int)
+			 * (r.getWidth() ((endSpan * 100) / beginSpan) / 100));
+			 * r.setNameFontSize( (r.getNameFontSize() ((endSpan * 100) /
+			 * beginSpan) / 100)); r.getInterest().setFontSize(
+			 * (r.getInterest().getFontSize() ((endSpan * 100) / beginSpan) /
+			 * 100)); } }
+			 */
 
 		}
 
