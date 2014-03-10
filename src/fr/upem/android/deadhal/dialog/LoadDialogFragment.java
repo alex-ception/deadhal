@@ -13,7 +13,8 @@ import android.os.Bundle;
 
 public class LoadDialogFragment extends DialogFragment
 {
-    public interface LoadDialogListener {
+    public interface LoadDialogListener
+    {
         public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName) throws FileNotFoundException, IOException;
         public void onDialogNegativeClick(LoadDialogFragment dialog);
     }

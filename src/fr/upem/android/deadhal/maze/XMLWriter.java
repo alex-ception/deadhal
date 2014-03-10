@@ -69,7 +69,7 @@ public class XMLWriter
 
         for (Room room : this.maze.getRooms().values()) {
             this.buildRoom(room, roomsNode);
-            this.buildInterests(room, interestsNode);
+//            this.buildInterests(room, interestsNode);
         }
 
         root.appendChild(roomsNode);
@@ -99,33 +99,28 @@ public class XMLWriter
         roomElement.appendChild(outputsNode);
         roomsNode.appendChild(roomElement);
     }
+
+    public Element buildDirectedIO(String IOType, String direction, LinkedRoom room)
+    {
+        Element directedIOElement = this.document.createElement(IOType);
+
+        directedIOElement.setAttribute(XMLWriter.ID_ROOM, room.getRoom().getId());
+        directedIOElement.setAttribute(XMLWriter.ATTR_IO_FROM, direction);
+        directedIOElement.setAttribute(XMLWriter.ATTR_IO_TO, room.getDirectionString());
+
+        return directedIOElement;
+    }
     
     public void buildInputs(Room room, Element inputsNode)
     {
-        for (LinkedRoom input : room.getInputs().getNorth()) {
-            Element inputElement = this.document.createElement(XMLWriter.ID_INPUT);
-            inputElement.setAttribute(XMLWriter.ID_ROOM, input.getRoom().getId());
-            inputElement.setAttribute(XMLWriter.ATTR_IO_FROM, "north");
-            inputElement.setAttribute(XMLWriter.ATTR_IO_TO, input.getDirectionString());
-        }
-        for (LinkedRoom input : room.getInputs().getSouth()) {
-            Element inputElement = this.document.createElement(XMLWriter.ID_INPUT);
-            inputElement.setAttribute(XMLWriter.ID_ROOM, input.getRoom().getId());
-            inputElement.setAttribute(XMLWriter.ATTR_IO_FROM, "south");
-            inputElement.setAttribute(XMLWriter.ATTR_IO_TO, input.getDirectionString());
-        }
-        for (LinkedRoom input : room.getInputs().getWest()) {
-            Element inputElement = this.document.createElement(XMLWriter.ID_INPUT);
-            inputElement.setAttribute(XMLWriter.ID_ROOM, input.getRoom().getId());
-            inputElement.setAttribute(XMLWriter.ATTR_IO_FROM, "west");
-            inputElement.setAttribute(XMLWriter.ATTR_IO_TO, input.getDirectionString());
-        }
-        for (LinkedRoom input : room.getInputs().getEast()) {
-            Element inputElement = this.document.createElement(XMLWriter.ID_INPUT);
-            inputElement.setAttribute(XMLWriter.ID_ROOM, input.getRoom().getId());
-            inputElement.setAttribute(XMLWriter.ATTR_IO_FROM, "east");
-            inputElement.setAttribute(XMLWriter.ATTR_IO_TO, input.getDirectionString());
-        }
+        for (LinkedRoom input : room.getInputs().getNorth())
+            inputsNode.appendChild(this.buildDirectedIO(XMLWriter.ID_INPUT, Direction.NORTH_STR, input));
+        for (LinkedRoom input : room.getInputs().getSouth())
+            inputsNode.appendChild(this.buildDirectedIO(XMLWriter.ID_INPUT, Direction.SOUTH_STR, input));
+        for (LinkedRoom input : room.getInputs().getWest())
+            inputsNode.appendChild(this.buildDirectedIO(XMLWriter.ID_INPUT, Direction.WEST_STR, input));
+        for (LinkedRoom input : room.getInputs().getEast())
+            inputsNode.appendChild(this.buildDirectedIO(XMLWriter.ID_INPUT, Direction.EAST_STR, input));
     }
 
     public void buildOutputs(Room room, Element outputsNode)
