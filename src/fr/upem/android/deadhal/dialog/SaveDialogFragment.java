@@ -11,8 +11,9 @@ import android.widget.EditText;
 
 public class SaveDialogFragment extends DialogFragment
 {
-    public interface SaveDialogListener {
-        public void onDialogPositiveClick(SaveDialogFragment dialog);
+    public interface SaveDialogListener
+    {
+        public void onDialogPositiveClick(SaveDialogFragment dialog, String levelName);
         public void onDialogNegativeClick(SaveDialogFragment dialog);
     }
 
@@ -24,7 +25,6 @@ public class SaveDialogFragment extends DialogFragment
     {
         this.levelName                  = new EditText(this.getActivity());
         final AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
-
         
         alert
             .setTitle(R.string.builder_menu_save)
@@ -34,7 +34,7 @@ public class SaveDialogFragment extends DialogFragment
                 @Override
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    listener.onDialogPositiveClick(SaveDialogFragment.this);
+                    listener.onDialogPositiveClick(SaveDialogFragment.this, levelName.getText().toString());
                 }
             })
             .setNegativeButton(R.string.builder_save_level_nok, new DialogInterface.OnClickListener() {
@@ -59,10 +59,5 @@ public class SaveDialogFragment extends DialogFragment
         } catch(ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement SaveDialogListener");
         }
-    }
-
-    public String getLevelName()
-    {
-        return this.levelName.getText().toString();
     }
 }
