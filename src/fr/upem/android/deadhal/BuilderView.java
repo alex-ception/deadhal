@@ -3,7 +3,9 @@ package fr.upem.android.deadhal;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Room;
+import fr.upem.android.deadhal.utils.Rooms;
 import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 import android.annotation.SuppressLint;
@@ -15,10 +17,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.Path.Direction;
 import android.graphics.Picture;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
@@ -72,7 +77,12 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 /*		Room r1 = new Room("room 1 ", "room 1 ");
 		Room r2 = new Room("salle de réception", "salle de réception");
 		r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
-		r2.setX(200).setY(200).setWidth(500).setHeight(200);
+		r2.setX(200).setY(200).setWidth(500).setHeight(200).setRotation(45);
+		LinkedRoom lr1 = new LinkedRoom(fr.upem.android.deadhal.maze.Direction.WEST, r2);
+		r1.getInputs().addSouth(lr1);
+		r1.getInputs().addNorth(lr1);
+		r1.getInputs().addEast(lr1);
+		r1.getInputs().addWest(lr1);
 		rooms.add(r1);
 		rooms.add(r2);*/
 		selectedRoom = null;
@@ -167,6 +177,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		return null;
 	}
 
+	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
@@ -182,6 +193,10 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		Paint paintRoomInterest = new Paint();
 		paintRoomInterest.setStyle(Paint.Style.FILL);
 		paintRoomInterest.setColor(Color.YELLOW);
+		
+		Paint paintInputs = new Paint();
+		paintInputs.setStyle(Paint.Style.FILL);
+		paintInputs.setColor(Color.DKGRAY);
 
 		for (Room r : rooms) {
 			int xleft = r.getXLeft();
@@ -202,6 +217,65 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			canvas.drawText(r.getName(), xleft, ytop + r.getInterest().getFontSize(), paintRoomInterest);
 
 			canvas.restore();
+			for (LinkedRoom input : r.getInputs().getEast()) {
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getXRight(), r.getY())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point linkedPoint = input.getEndingPoint();
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				canvas.save();
+				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+				canvas.save();
+				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+			}
+			for (LinkedRoom input : r.getInputs().getNorth()) {
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getX(), r.getYTop())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point linkedPoint = input.getEndingPoint();
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				canvas.save();
+				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+				canvas.save();
+				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+			}
+			for (LinkedRoom input : r.getInputs().getSouth()) {
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getX(), r.getYBottom())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point linkedPoint = input.getEndingPoint();
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				canvas.save();
+				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+				canvas.save();
+				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+				
+				
+			}
+			for (LinkedRoom input : r.getInputs().getWest()) {
+				Point RotatedPointRoom = Rooms.getnewRotatedPoint((new Point(r.getXLeft(), r.getY())), new Point(r.getX(), r.getY()), r.getRotation());
+				Point linkedPoint = input.getEndingPoint();
+				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)), new Point(input.getRoom().getX(), input.getRoom().getY()), input.getRoom().getRotation());	
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y, RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
+				canvas.save();
+				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+				canvas.save();
+				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
+				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,(float) (RotatedPointRoom.x-((RotatedPointRoom.x-RotatedlinkedPoint.x)*0.1)),(float) (RotatedPointRoom.y-((RotatedPointRoom.y-RotatedlinkedPoint.y)*0.1)), paintInputs);
+				canvas.restore();
+			}
+			
 		}
 		/*
 		 * Bitmap myicon = BitmapFactory.decodeResource(getResources(),
