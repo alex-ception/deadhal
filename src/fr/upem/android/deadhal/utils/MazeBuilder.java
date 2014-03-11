@@ -7,7 +7,7 @@ abstract public class MazeBuilder
 {
     public static Room newRoom(String name)
     {
-        return MazeBuilder.newRoom(name, new Point(0, 0), new Point(100, 100), 0);
+        return MazeBuilder.newRoom(name, new Point(350, 500), new Point(300, 300), 0);
     }
 
     public static Room newRoom(String name, Point position, Point size, float rotation)

@@ -195,19 +195,20 @@ public class Room
 	}
 	
 	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if(o instanceof Room){
-			if (this.getId()==((Room)o).getId()&&
-					this.getName()==((Room)o).getName()&&
-					this.getWidth()==((Room)o).getWidth()&&
-					this.getHeight()==((Room)o).getHeight()&&
-					this.getX()==((Room)o).getX()&&
-					this.getY()==((Room)o).getY()){
+			if (this.getId()==((Room)o).getId()){
 				return true;
 			}
 		}
 		return false;
 	}
+	
 	
 	
 }

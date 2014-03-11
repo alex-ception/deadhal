@@ -21,7 +21,7 @@ public class Interest
     {
         this.id         = name;
         this.name       = name;
-        this.fontSize   = 25;
+        this.fontSize   = 20;
     }
 
     public String getId()

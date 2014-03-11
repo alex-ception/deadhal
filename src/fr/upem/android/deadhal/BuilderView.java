@@ -43,12 +43,12 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
 	Maze maze;
-	int beginSpan;
-	int beginSpanX;
-	int beginSpanY;
-	int endSpan;
-	int endSpanX;
-	int endSpanY;
+	float beginSpan;
+	float beginSpanX;
+	float beginSpanY;
+	float endSpan;
+	float endSpanX;
+	float endSpanY;
 
 	Switch RotateSwitch;
 
@@ -132,7 +132,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 
 			mLastTouchX = x;
 			mLastTouchY = y;
-
 			break;
 		}
 		case MotionEvent.ACTION_UP: {
@@ -179,7 +178,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawColor(Color.BLACK);
+		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
 		Paint paintRoom = new Paint();
 		paintRoom.setStyle(Paint.Style.FILL);
@@ -217,11 +216,11 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				canvas.drawText(r.getName(), xleft, ytop
 						+ r.getInterest().getFontSize(), paintRoomInterest);
 			}
+			canvas.restore();
 		}
 
 		for (Room r : maze.getRooms().values()) {
 
-			canvas.restore();
 			for (LinkedRoom input : r.getInputs().getEast()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getXRight(), r.getY())),
@@ -466,36 +465,47 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		@Override
 		public void onScaleEnd(ScaleGestureDetector detector) {
 
-			endSpan = (int) detector.getCurrentSpan();
-			endSpanX = (int) detector.getCurrentSpanX();
-			endSpanY = (int) detector.getCurrentSpanY();
+			endSpan = detector.getCurrentSpan();
+			endSpanX = detector.getCurrentSpanX();
+			endSpanY = detector.getCurrentSpanY();
 			if (selectedRoom != null) {
 				if (!RotateSwitch.isChecked()) {
-					selectedRoom.setHeight((int) (selectedRoom.getHeight()
-							* ((endSpanX * 100) / beginSpanX) / 100));
-					selectedRoom.setWidth((int) (selectedRoom.getWidth()
-							* ((endSpanY * 100) / beginSpanY) / 100));
+					float XPercent = ((endSpanX * 100) / beginSpanX) / 100;
+					float YPercent = ((endSpanY * 100) / beginSpanY) / 100;
 					selectedRoom
-							.setNameFontSize((selectedRoom.getNameFontSize()
-									* ((endSpan * 100) / beginSpan) / 100));
+							.setHeight((int) (selectedRoom.getHeight() * XPercent));
+					selectedRoom
+							.setWidth((int) (selectedRoom.getWidth() * YPercent));
+					selectedRoom.setNameFontSize(selectedRoom.getNameFontSize()
+							* (XPercent * YPercent));
 					if (selectedRoom.getInterest() != null) {
 						selectedRoom.getInterest().setFontSize(
-								(selectedRoom.getInterest().getFontSize()
-										* ((endSpan * 100) / beginSpan) / 100));
+								selectedRoom.getInterest().getFontSize()
+										* (XPercent * YPercent));
 					}
 				}
-			} /*
-			 * else { for (Room r : rooms) { r.setHeight((int) (r.getHeight()
-			 * ((endSpan * 100) / beginSpan) / 100)); r.setWidth((int)
-			 * (r.getWidth() ((endSpan * 100) / beginSpan) / 100));
-			 * r.setNameFontSize( (r.getNameFontSize() ((endSpan * 100) /
-			 * beginSpan) / 100)); r.getInterest().setFontSize(
-			 * (r.getInterest().getFontSize() ((endSpan * 100) / beginSpan) /
-			 * 100)); } }
-			 */
+			} else {
+				for (Room r : maze.getRooms().values()) {
+					float percentScale = ((endSpan * 100) / beginSpan) / 100;
+					if (!RotateSwitch.isChecked()) {
+						
+						r.setHeight((int) (r.getHeight() * percentScale));
+						r.setWidth((int) (r.getWidth() * percentScale));
+						r.setNameFontSize(r.getNameFontSize()
+								* (percentScale));
+						if (r.getInterest() != null) {
+							r.getInterest().setFontSize(
+									r.getInterest().getFontSize()
+											* (percentScale));
+						}
+						r.setX((int) (((r.getX()-(getWidth()/2)))*percentScale));
+						r.setY((int) (((r.getY()-(getHeight()/2)))*percentScale));
+					}
+					
+				}
+			}
 
 		}
-
 	}
 
 }
