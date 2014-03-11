@@ -2,7 +2,6 @@ package fr.upem.android.deadhal;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -203,14 +202,13 @@ implements
 
             while ((temp = br.readLine()) != null)
                 content.append(temp);
-            XMLReader xmlReader = new XMLReader(content.toString());
+            XMLReader xmlReader = new XMLReader(this.maze, content.toString());
             this.maze = xmlReader.getMaze();
         } catch (Exception e) {
             this.onDialogNegativeClick(dialog);
             this.loadAction();
         }
     }
-
 
     /**
      * Handles the cancel button when trying to load a maze through dialog
@@ -264,7 +262,7 @@ implements
         }
 
         try {
-            this.maze.addRoom(MazeBuilder.newRoom(roomName));
+            this.maze.addRoom(MazeBuilder.newRoom(null, roomName));
         } catch (RuntimeException e) {
             Toast
                 .makeText(this.getApplicationContext(), R.string.builder_room_already_referenced, Toast.LENGTH_LONG)

@@ -68,9 +68,9 @@ public class MazeBuilder
      * 
      * @return The new room instantiated
      */
-    public static Room newRoom(String name)
+    public static Room newRoom(String id, String name)
     {
-        return MazeBuilder.newRoom(name, new Point(350, 500), new Point(300, 300), 0);
+        return MazeBuilder.newRoom(id, name, new Point(350, 500), new Point(300, 300), 0);
     }
 
     /**
@@ -85,9 +85,9 @@ public class MazeBuilder
 
      * @return The new room instantiated
      */
-    public static Room newRoom(String name, Point position, Point size, float rotation) throws RuntimeException
+    public static Room newRoom(String id, String name, Point position, Point size, float rotation) throws RuntimeException
     {
-        return new Room(name)
+        return new Room(id, name)
             .setX(position.x)
             .setY(position.y)
             .setWidth(size.x)

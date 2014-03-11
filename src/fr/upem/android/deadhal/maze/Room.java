@@ -61,13 +61,13 @@ public class Room
      */
     private Interest interest;
 
-    public Room(String name) throws RuntimeException
+    public Room(String id, String name) throws RuntimeException
     {
         MazeBuilder.getInstance().referenceRoomName(name);
 
         this.inputs     = new Input();
         this.outputs    = new Output();
-        this.id         = UUID.randomUUID().toString();
+        this.id = (id == null) ? UUID.randomUUID().toString() : id;
         this.name       = name;
         this.nameFontSize = 25;
     }
