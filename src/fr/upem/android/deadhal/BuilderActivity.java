@@ -9,19 +9,20 @@ import java.io.InputStreamReader;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 import fr.upem.android.deadhal.dialog.LoadDialogFragment;
+import fr.upem.android.deadhal.dialog.NewIODialogFragment;
 import fr.upem.android.deadhal.dialog.NewRoomDialogFragment;
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
+import fr.upem.android.deadhal.maze.Room;
+import fr.upem.android.deadhal.maze.XMLReader;
 import fr.upem.android.deadhal.maze.XMLWriter;
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
@@ -33,7 +34,12 @@ import fr.upem.android.deadhal.utils.MazeBuilder;
  * @author Remy BARBOSA
  * @author Houmam WEHBEH
  */
-public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener, LoadDialogFragment.LoadDialogListener, NewRoomDialogFragment.NewRoomDialogListener
+public class BuilderActivity extends FragmentActivity
+implements
+    SaveDialogFragment.SaveDialogListener,
+    LoadDialogFragment.LoadDialogListener,
+    NewRoomDialogFragment.NewRoomDialogListener,
+    NewIODialogFragment.NewIODialogListener
 {
     /**
      * The object representing the maze
@@ -53,7 +59,6 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
         BuilderView mView = new BuilderView(this);
         linearLayout.addView(mView);
-        
     }
 
     /**
@@ -110,7 +115,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to save a new maze through dialog
      * Saves the maze if everything is OK
-     * Calls cancel button handler if the level name was not properly filled
+     * Shows a toast and recalls the dialog if the room name if empty or there was a error while saving
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to save
@@ -121,8 +126,12 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     public void onDialogPositiveClick(SaveDialogFragment dialog, String levelName)
     {
         if (levelName.length() == 0) {
-            this.onDialogNegativeClick(dialog);
-
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_save_level_name_empty, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.saveAction();
+    
             return;
         }
 
@@ -136,7 +145,8 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
             fp.write(xmlWriter.getContent().getBytes());
             fp.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            this.onDialogNegativeClick(dialog);
+            this.saveAction();
         }
     }
 
@@ -172,7 +182,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to load a new maze through dialog
      * Loads the maze if everything is OK
-     * Calls cancel button handler if the level name was not properly filled
+     * Calls cancel button handler if the level name was not properly filled and recalls the dialog
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to load
@@ -193,9 +203,11 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 
             while ((temp = br.readLine()) != null)
                 content.append(temp);
-//          XMLReader xmlReader = new XMLReader(content.toString());*/
-        } catch (IOException e) {
+            XMLReader xmlReader = new XMLReader(content.toString());
+            this.maze = xmlReader.getMaze();
+        } catch (Exception e) {
             this.onDialogNegativeClick(dialog);
+            this.loadAction();
         }
     }
 
@@ -231,7 +243,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to add a new room through dialog
      * Adds the room to the maze if everything is OK
-     * Calls cancel button handler if the room name was not properly filled
+     * Shows a toast and recalls the dialog if the room name if empty or already referenced
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the room to add
@@ -242,12 +254,24 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     public void onDialogPositiveClick(NewRoomDialogFragment dialog, String roomName)
     {
         if (roomName.length() == 0) {
-            this.onDialogNegativeClick(dialog);
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_room_name_empty, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.newRoomAction();
 
             return;
         }
 
-        this.maze.addRoom(MazeBuilder.newRoom(roomName));
+        try {
+            this.maze.addRoom(MazeBuilder.newRoom(roomName));
+        } catch (RuntimeException e) {
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_room_already_referenced, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.newIOAction();
+        }
     }
 
     /**
@@ -284,10 +308,64 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
             return;
         }
 
-        
+        DialogFragment loadDialog = new NewIODialogFragment();
+        loadDialog.show(this.getFragmentManager(), "NewIODialogFragment");
     }
 
-	public Maze getMaze() {
+    /**
+     * Handles the OK button when trying to add a new IO through dialog
+     * Adds the IO to the maze if everything is OK
+     * Shows a toast and recalls the dialog if the IO is a loop on the same room
+     * 
+     * @param dialog The dialog fragment created
+     * @param from The room where the IO starts
+     * @param directionFrom The position of the IO on the room
+     * @param to The room where the IO ends
+     * @param directionTo The position of the IO on the room
+     * @param twoWay Defines if the IO a two-way IO
+     * 
+     * @return void
+     */
+    @Override
+    public void onDialogPositiveClick(NewIODialogFragment dialog, Room from, int directionFrom, Room to, int directionTo, boolean twoWay)
+    {
+        if (from.getId() == to.getId()) {
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_io_same_room, Toast.LENGTH_LONG)
+                .show()
+            ;
+
+            this.newIOAction();
+            return;
+        }
+
+        MazeBuilder.newIo(from, directionFrom, to, directionTo, twoWay);
+    }
+
+    /**
+     * Handles the cancel button when trying to add a IO through dialog
+     * Shows a Toast saying the IO was not added
+     * 
+     * @param dialog The dialog fragment created
+     * 
+     * @return void
+     */
+    @Override
+    public void onDialogNegativeClick(NewIODialogFragment dialog)
+    {
+        Toast
+            .makeText(this.getApplicationContext(), R.string.builder_io_error, Toast.LENGTH_LONG)
+            .show()
+        ;
+    }
+
+    /**
+     * Returns the maze
+
+     * @return the maze
+     */
+	public Maze getMaze()
+	{
 		return this.maze;
 	}
 }

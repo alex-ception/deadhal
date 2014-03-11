@@ -18,17 +18,33 @@
    	<string name="builder_save_level_name">Level name</string>
    	<string name="builder_save_level_ok">OK</string>
    	<string name="builder_save_level_nok">Cancel</string>
+   	<string name="builder_save_level_name_empty">The level name cannot be empty</string>
    	<string name="builder_save_level_error">Level was not saved</string>
    	
    	<string name="builder_load_level_ok">OK</string>
    	<string name="builder_load_level_nok">Cancel</string>
    	<string name="builder_load_level_error">Level was not loaded</string>
    	
-   	<string name="builder_room_ok">OK</string>
+   	<string name="builder_room_name">Room name</string>
+ 	<string name="builder_room_ok">OK</string>
    	<string name="builder_room_nok">Cancel</string>
-   	<string name="builder_room_error">Room was not loaded</string>
-
+   	<string name="builder_room_name_empty">The room name cannot be empty</string>
+   	<string name="builder_room_error">Room was not added</string>
+   	<string name="builder_room_already_referenced">A room with this name already exists</string>
+   	
    	<string name="builder_io_not_enough_room">Two room needed to add an IO</string>
+   	<string name="builder_io_label_from">From :</string>
+   	<string name="builder_io_label_to">To :</string>
+   	<string name="builder_io_label_two_way">Two-Way IO :</string>
+   	<string name="builder_io_same_room">Cannot create IO on the same room</string>
+   	<string name="builder_io_error">The IO was not added</string>
+   				
+   	<string name="builder_switch_rotation">Rotation :</string>
 
-   	<string name="Rotate">Rotation :</string>
+   	<string-array name="directions_values">
+   	    <item>North</item>
+   	    <item>South</item>
+		<item>East</item>
+		<item>West</item>
+	</string-array>
 </resources>

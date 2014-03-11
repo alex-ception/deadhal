@@ -20,6 +20,9 @@ public class SaveDialogFragment extends DialogFragment
     private SaveDialogListener listener;
     private EditText levelName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
@@ -48,6 +51,9 @@ public class SaveDialogFragment extends DialogFragment
         return alert.create();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttach(Activity activity)
     {

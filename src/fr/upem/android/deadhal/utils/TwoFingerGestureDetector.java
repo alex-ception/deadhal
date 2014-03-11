@@ -1,4 +1,5 @@
 package fr.upem.android.deadhal.utils;
+
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;

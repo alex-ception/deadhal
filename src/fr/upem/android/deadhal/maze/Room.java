@@ -2,6 +2,8 @@ package fr.upem.android.deadhal.maze;
 
 import java.util.UUID;
 
+import fr.upem.android.deadhal.utils.MazeBuilder;
+
 public class Room
 {
     /**
@@ -59,8 +61,10 @@ public class Room
      */
     private Interest interest;
 
-    public Room(String name)
+    public Room(String name) throws RuntimeException
     {
+        MazeBuilder.getInstance().referenceRoomName(name);
+
         this.inputs     = new Input();
         this.outputs    = new Output();
         this.id         = UUID.randomUUID().toString();

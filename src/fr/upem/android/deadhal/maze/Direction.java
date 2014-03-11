@@ -19,6 +19,20 @@ public abstract class Direction
     private final ArrayList<LinkedRoom> west;
     private final ArrayList<LinkedRoom> east;
 
+    public static int getDirectionToInt(String direction)
+    {
+        if (direction.equalsIgnoreCase(Direction.NORTH_STR))
+            return Direction.NORTH;
+
+        if (direction.equalsIgnoreCase(Direction.SOUTH_STR))
+            return Direction.SOUTH;
+
+        if (direction.equalsIgnoreCase(Direction.WEST_STR))
+            return Direction.WEST;
+
+        return Direction.EAST;
+    }
+    
     public Direction()
     {
         this.north  = new ArrayList<LinkedRoom>();
