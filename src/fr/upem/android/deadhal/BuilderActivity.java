@@ -21,6 +21,8 @@ import fr.upem.android.deadhal.dialog.NewIODialogFragment;
 import fr.upem.android.deadhal.dialog.NewRoomDialogFragment;
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
+import fr.upem.android.deadhal.maze.Room;
+import fr.upem.android.deadhal.maze.XMLReader;
 import fr.upem.android.deadhal.maze.XMLWriter;
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
@@ -32,7 +34,12 @@ import fr.upem.android.deadhal.utils.MazeBuilder;
  * @author Remy BARBOSA
  * @author Houmam WEHBEH
  */
-public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener, LoadDialogFragment.LoadDialogListener, NewRoomDialogFragment.NewRoomDialogListener, NewIODialogFragment.NewIODialogListener
+public class BuilderActivity extends FragmentActivity
+implements
+    SaveDialogFragment.SaveDialogListener,
+    LoadDialogFragment.LoadDialogListener,
+    NewRoomDialogFragment.NewRoomDialogListener,
+    NewIODialogFragment.NewIODialogListener
 {
     /**
      * The object representing the maze
@@ -196,8 +203,9 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 
             while ((temp = br.readLine()) != null)
                 content.append(temp);
-//          XMLReader xmlReader = new XMLReader(content.toString());*/
-        } catch (IOException e) {
+            XMLReader xmlReader = new XMLReader(content.toString());
+            this.maze = xmlReader.getMaze();
+        } catch (Exception e) {
             this.onDialogNegativeClick(dialog);
             this.loadAction();
         }
@@ -304,17 +312,60 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         loadDialog.show(this.getFragmentManager(), "NewIODialogFragment");
     }
 
+    /**
+     * Handles the OK button when trying to add a new IO through dialog
+     * Adds the IO to the maze if everything is OK
+     * Shows a toast and recalls the dialog if the IO is a loop on the same room
+     * 
+     * @param dialog The dialog fragment created
+     * @param from The room where the IO starts
+     * @param directionFrom The position of the IO on the room
+     * @param to The room where the IO ends
+     * @param directionTo The position of the IO on the room
+     * @param twoWay Defines if the IO a two-way IO
+     * 
+     * @return void
+     */
     @Override
-    public void onDialogPositiveClick(NewIODialogFragment dialog, String from, String to, boolean twoWay)
+    public void onDialogPositiveClick(NewIODialogFragment dialog, Room from, int directionFrom, Room to, int directionTo, boolean twoWay)
     {
+        if (from.getId() == to.getId()) {
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_io_same_room, Toast.LENGTH_LONG)
+                .show()
+            ;
+
+            this.newIOAction();
+            return;
+        }
+
+        MazeBuilder.newIo(from, directionFrom, to, directionTo, twoWay);
     }
 
+    /**
+     * Handles the cancel button when trying to add a IO through dialog
+     * Shows a Toast saying the IO was not added
+     * 
+     * @param dialog The dialog fragment created
+     * 
+     * @return void
+     */
     @Override
     public void onDialogNegativeClick(NewIODialogFragment dialog)
     {
+        Toast
+            .makeText(this.getApplicationContext(), R.string.builder_io_error, Toast.LENGTH_LONG)
+            .show()
+        ;
     }
 
-	public Maze getMaze() {
+    /**
+     * Returns the maze
+
+     * @return the maze
+     */
+	public Maze getMaze()
+	{
 		return this.maze;
 	}
 }

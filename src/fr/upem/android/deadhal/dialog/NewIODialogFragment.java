@@ -1,6 +1,16 @@
 package fr.upem.android.deadhal.dialog;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.TreeMap;
+
+import fr.upem.android.deadhal.BuilderActivity;
 import fr.upem.android.deadhal.R;
+import fr.upem.android.deadhal.maze.Direction;
+import fr.upem.android.deadhal.maze.Maze;
+import fr.upem.android.deadhal.maze.Room;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,11 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+@SuppressLint("DefaultLocale")
 public class NewIODialogFragment extends DialogFragment
 {
     public interface NewIODialogListener
     {
-        public void onDialogPositiveClick(NewIODialogFragment dialog, String from, String to, boolean twoWay);
+        public void onDialogPositiveClick(NewIODialogFragment dialog, Room from, int directionFrom, Room to, int directionTo, boolean twoWay);
         public void onDialogNegativeClick(NewIODialogFragment dialog);
     }
 
@@ -29,17 +40,21 @@ public class NewIODialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        LayoutInflater inflater         = this.getActivity().getLayoutInflater();
-        View view                       = inflater.inflate(R.layout.dialog_new_io, null);
-        final AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
-        final Spinner fromDirection     = (Spinner) view.findViewById(R.id.from_direction);
-        final Spinner fromRoom          = (Spinner) view.findViewById(R.id.from_room);
-        final Spinner toDirection       = (Spinner) view.findViewById(R.id.to_direction);
-        final Spinner toRoom            = (Spinner) view.findViewById(R.id.to_room);
-        final Switch twoWay             = (Switch) view.findViewById(R.id.two_way);
+        LayoutInflater inflater             = this.getActivity().getLayoutInflater();
+        View view                           = inflater.inflate(R.layout.dialog_new_io, null);
+        final Maze maze                     = ((BuilderActivity) this.getActivity()).getMaze();
+        final TreeMap<String, String> rooms = maze.getRoomsByIdAndName();
+        final AlertDialog.Builder alert     = new AlertDialog.Builder(this.getActivity());
+        final Spinner fromDirection         = (Spinner) view.findViewById(R.id.from_direction);
+        final Spinner fromRoom              = (Spinner) view.findViewById(R.id.from_room);
+        final Spinner toDirection           = (Spinner) view.findViewById(R.id.to_direction);
+        final Spinner toRoom                = (Spinner) view.findViewById(R.id.to_room);
+        final Switch twoWay                 = (Switch) view.findViewById(R.id.two_way);
 
         this.fillDirection(fromDirection);
         this.fillDirection(toDirection);
+        this.fillSpinner(fromRoom, rooms.values());
+        this.fillSpinner(toRoom, rooms.values());
 
         alert
             .setTitle(R.string.builder_menu_io)
@@ -48,7 +63,19 @@ public class NewIODialogFragment extends DialogFragment
                 @Override
                 public void onClick(DialogInterface dialog, int which)
                 {
-//                    listener.onDialogPositiveClick(NewIODialogFragment.this, levelName.getText().toString());
+                    Room fromRoomObject     = maze.getRoomById((String) rooms.keySet().toArray()[(int) fromRoom.getSelectedItemId()]);
+                    Room toRoomObject       = maze.getRoomById((String) rooms.keySet().toArray()[(int) toRoom.getSelectedItemId()]);
+                    String fromDirectionStr = ((String) fromDirection.getSelectedItem()).toLowerCase(Locale.ENGLISH);
+                    String toDirectionStr   = ((String) toDirection.getSelectedItem()).toLowerCase(Locale.ENGLISH);
+
+                    listener.onDialogPositiveClick(
+                            NewIODialogFragment.this,
+                            fromRoomObject,
+                            Direction.getDirectionToInt(fromDirectionStr),
+                            toRoomObject,
+                            Direction.getDirectionToInt(toDirectionStr),
+                            twoWay.isChecked()
+                    );
                 }
             })
             .setNegativeButton(R.string.builder_save_level_nok, new DialogInterface.OnClickListener() {
@@ -78,9 +105,17 @@ public class NewIODialogFragment extends DialogFragment
         }
     }
 
-    private void fillSpinner(Spinner spinner)
+    private void fillSpinner(Spinner spinner, Collection<String> values)
     {
-        
+        ArrayList<String> valuesAL = new ArrayList<String>();
+        valuesAL.addAll(values);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this.getActivity(),
+                android.R.layout.simple_spinner_dropdown_item,
+                valuesAL
+        );
+        spinner.setAdapter(adapter);
     }
 
     private void fillDirection(Spinner spinner)
