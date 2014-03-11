@@ -17,13 +17,13 @@ public class LinkedRoom
     {
         switch (direction) {
             case Direction.NORTH:
-                return new Point(room.getX(), room.getYTop());
+                return new Point((int)room.getX(),(int) room.getYTop());
             case Direction.SOUTH:
-                return new Point(room.getX(), room.getYBottom());
+                return new Point((int)room.getX(),(int) room.getYBottom());
             case Direction.WEST:
-                return new Point(room.getXLeft(), room.getY());
+                return new Point((int)room.getXLeft(),(int) room.getY());
             case Direction.EAST:
-                return new Point(room.getXRight(), room.getY());
+                return new Point((int)room.getXRight(),(int) room.getY());
             default:
                 throw new IllegalArgumentException("Undefined direction");
         }
