@@ -12,23 +12,36 @@ public class Maze
     private String name;
 	private ConcurrentHashMap<String, Room> rooms;
 	
-	public Maze()
+	public Maze(String name)
 	{
+	    this.setName(name);
 		this.rooms = new ConcurrentHashMap<String, Room>();
 	}
 
+	public Maze()
+	{
+	    this(null);
+	}
+
+	public void clean()
+	{
+	    this.id    = null;
+	    this.name  = null;
+	    this.rooms = new ConcurrentHashMap<String, Room>();
+	}
+	
 	public ConcurrentHashMap<String, Room> getRooms()
 	{
 	    return this.rooms;
 	}
 
-	public Maze setName(String name)
-	{
-	    this.id    = name;
-	    this.name  = name;
-
-	    return this;
-	}
+    public Maze setName(String name)
+    {
+        this.id     = name;
+        this.name   = name;
+        
+        return this;
+    }
 
 	public String getId()
 	{

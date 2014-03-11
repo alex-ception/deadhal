@@ -23,7 +23,8 @@ import android.view.SurfaceView;
 import android.widget.Switch;
 
 @SuppressLint("WrongCall")
-public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
+public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
+{
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;

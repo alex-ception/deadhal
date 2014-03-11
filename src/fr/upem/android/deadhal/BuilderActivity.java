@@ -54,9 +54,9 @@ implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_builder);
 
-        this.maze = new Maze();
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
-        BuilderView mView = new BuilderView(this);
+        this.maze                   = new Maze();
+        LinearLayout linearLayout   = (LinearLayout)findViewById(R.id.linearLayout);
+        BuilderView mView           = new BuilderView(this);
         linearLayout.addView(mView);
     }
 
@@ -144,6 +144,7 @@ implements
             fp.write(xmlWriter.getContent().getBytes());
             fp.close();
         } catch (Exception e) {
+            e.printStackTrace();
             this.onDialogNegativeClick(dialog);
             this.saveAction();
         }
@@ -202,6 +203,7 @@ implements
 
             while ((temp = br.readLine()) != null)
                 content.append(temp);
+            Log.e("DH", content.toString());
             XMLReader xmlReader = new XMLReader(this.maze, content.toString());
             this.maze = xmlReader.getMaze();
         } catch (Exception e) {
