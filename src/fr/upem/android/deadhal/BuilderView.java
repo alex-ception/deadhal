@@ -189,8 +189,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 			int ybottom = r.getYBottom();
 			Rect rect = new Rect(xleft, ytop, xright, ybottom);
 			canvas.save();
-			int centerx = r.getX();
-			int centery = r.getY();
+			float centerx = r.getX();
+			float centery = r.getY();
 			canvas.rotate(r.getRotation(), centerx, centery);
 			canvas.drawRect(rect, paintRoom);
 			paintRoomName.setTextSize(r.getNameFontSize());
@@ -484,8 +484,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 									r.getInterest().getFontSize()
 											* (percentScale));
 						}
-						r.setX((int) (((r.getX()-(getWidth()/2)))*percentScale));
-						r.setY((int) (((r.getY()-(getHeight()/2)))*percentScale));
+						r.setX((int) (r.getX()*percentScale));
+						r.setY((int) (r.getY()*percentScale));
 					}
 					
 				}
