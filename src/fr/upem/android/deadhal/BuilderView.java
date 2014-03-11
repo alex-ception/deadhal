@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
+import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
 import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
@@ -23,8 +24,7 @@ import android.view.SurfaceView;
 import android.widget.Switch;
 
 @SuppressLint("WrongCall")
-public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
-{
+public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
@@ -160,173 +160,41 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		}
 		return null;
 	}
-
 	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
-		Paint paintRoom = new Paint();
-		paintRoom.setStyle(Paint.Style.FILL);
-		paintRoom.setColor(Color.rgb(145, 190, 242));
-
-		Paint paintRoomName = new Paint();
-		paintRoomName.setStyle(Paint.Style.FILL);
-		paintRoomName.setColor(Color.BLACK);
-
-		Paint paintRoomInterest = new Paint();
-		paintRoomInterest.setStyle(Paint.Style.FILL);
-		paintRoomInterest.setColor(Color.YELLOW);
-
-		Paint paintInputs = new Paint();
-		paintInputs.setStyle(Paint.Style.FILL);
-		paintInputs.setColor(Color.DKGRAY);
 
 		for (Room r : maze.getRooms().values()) {
-			int xleft = r.getXLeft();
-			int ytop = r.getYTop();
-			int xright = r.getXRight();
-			int ybottom = r.getYBottom();
-			Rect rect = new Rect(xleft, ytop, xright, ybottom);
-			canvas.save();
-			float centerx = r.getX();
-			float centery = r.getY();
-			canvas.rotate(r.getRotation(), centerx, centery);
-			canvas.drawRect(rect, paintRoom);
-			paintRoomName.setTextSize(r.getNameFontSize());
-			paintRoomName.setTextAlign(Align.CENTER);
-			canvas.drawText(r.getName(), centerx, centery, paintRoomName);
-			if (r.getInterest() != null) {
-				paintRoomInterest.setTextSize(r.getInterest().getFontSize());
-				paintRoomName.setTextAlign(Align.LEFT);
-				canvas.drawText(r.getName(), xleft, ytop
-						+ r.getInterest().getFontSize(), paintRoomInterest);
-			}
-			canvas.restore();
+			MazeDrawer.drawRoom(r, canvas);
 		}
 
 		for (Room r : maze.getRooms().values()) {
-
 			for (LinkedRoom input : r.getInputs().getEast()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getXRight(), r.getY())),
 						new Point(r.getX(), r.getY()), r.getRotation());
-				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
-						linkedPoint.x, linkedPoint.y)), new Point(input
-						.getRoom().getX(), input.getRoom().getY()), input
-						.getRoom().getRotation());
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
-						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
-				canvas.save();
-				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
-				canvas.save();
-				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
+				MazeDrawer.drawInputs(r, canvas, input, RotatedPointRoom);
+
 			}
 			for (LinkedRoom input : r.getInputs().getNorth()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getX(), r.getYTop())), new Point(r.getX(),
 								r.getY()), r.getRotation());
-				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
-						linkedPoint.x, linkedPoint.y)), new Point(input
-						.getRoom().getX(), input.getRoom().getY()), input
-						.getRoom().getRotation());
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
-						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
-				canvas.save();
-				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
-				canvas.save();
-				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
+				MazeDrawer.drawInputs(r, canvas, input, RotatedPointRoom);
 			}
 			for (LinkedRoom input : r.getInputs().getSouth()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getX(), r.getYBottom())),
 						new Point(r.getX(), r.getY()), r.getRotation());
-				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
-						linkedPoint.x, linkedPoint.y)), new Point(input
-						.getRoom().getX(), input.getRoom().getY()), input
-						.getRoom().getRotation());
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
-						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
-				canvas.save();
-				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
-				canvas.save();
-				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
-
+				MazeDrawer.drawInputs(r, canvas, input, RotatedPointRoom);
 			}
 			for (LinkedRoom input : r.getInputs().getWest()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getXLeft(), r.getY())), new Point(
 								r.getX(), r.getY()), r.getRotation());
-				Point linkedPoint = input.getEndingPoint();
-				Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
-						linkedPoint.x, linkedPoint.y)), new Point(input
-						.getRoom().getX(), input.getRoom().getY()), input
-						.getRoom().getRotation());
-				canvas.drawLine(RotatedPointRoom.x, RotatedPointRoom.y,
-						RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
-				canvas.save();
-				canvas.rotate(25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
-				canvas.save();
-				canvas.rotate(-25, RotatedPointRoom.x, RotatedPointRoom.y);
-				canvas.drawLine(
-						RotatedPointRoom.x,
-						RotatedPointRoom.y,
-						(float) (RotatedPointRoom.x - ((RotatedPointRoom.x - RotatedlinkedPoint.x) * 0.1)),
-						(float) (RotatedPointRoom.y - ((RotatedPointRoom.y - RotatedlinkedPoint.y) * 0.1)),
-						paintInputs);
-				canvas.restore();
+				MazeDrawer.drawInputs(r, canvas, input, RotatedPointRoom);
 			}
 		}
 		/*
@@ -474,20 +342,19 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 				for (Room r : maze.getRooms().values()) {
 					float percentScale = ((endSpan * 100) / beginSpan) / 100;
 					if (!RotateSwitch.isChecked()) {
-						
+
 						r.setHeight((int) (r.getHeight() * percentScale));
 						r.setWidth((int) (r.getWidth() * percentScale));
-						r.setNameFontSize(r.getNameFontSize()
-								* (percentScale));
+						r.setNameFontSize(r.getNameFontSize() * (percentScale));
 						if (r.getInterest() != null) {
 							r.getInterest().setFontSize(
 									r.getInterest().getFontSize()
 											* (percentScale));
 						}
-						r.setX((int) (r.getX()*percentScale));
-						r.setY((int) (r.getY()*percentScale));
+						r.setX((int) (r.getX() * percentScale));
+						r.setY((int) (r.getY() * percentScale));
 					}
-					
+
 				}
 			}
 
