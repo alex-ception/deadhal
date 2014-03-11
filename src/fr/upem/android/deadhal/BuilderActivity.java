@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -19,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 import fr.upem.android.deadhal.dialog.LoadDialogFragment;
+import fr.upem.android.deadhal.dialog.NewIODialogFragment;
 import fr.upem.android.deadhal.dialog.NewRoomDialogFragment;
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
@@ -33,7 +33,7 @@ import fr.upem.android.deadhal.utils.MazeBuilder;
  * @author Remy BARBOSA
  * @author Houmam WEHBEH
  */
-public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener, LoadDialogFragment.LoadDialogListener, NewRoomDialogFragment.NewRoomDialogListener
+public class BuilderActivity extends FragmentActivity implements SaveDialogFragment.SaveDialogListener, LoadDialogFragment.LoadDialogListener, NewRoomDialogFragment.NewRoomDialogListener, NewIODialogFragment.NewIODialogListener
 {
     /**
      * The object representing the maze
@@ -49,15 +49,14 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_builder);
 
-        this.maze = new Maze();
-        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
-        Switch sw = new Switch(getApplicationContext());
-        sw.setText("Rotation : ");
-        sw.setTextColor(Color.BLACK);
-        BuilderView mView = new BuilderView(this,sw);
+        this.maze                   = new Maze();
+        LinearLayout linearLayout   = (LinearLayout) this.findViewById(R.id.linearLayout);
+        Switch sw                   = new Switch(this.getApplicationContext());
+        BuilderView mView           = new BuilderView(this, sw);
+
+        sw.setText(R.string.builder_switch_rotation);
         linearLayout.addView(sw);
         linearLayout.addView(mView);
-        
     }
 
     /**
@@ -114,7 +113,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to save a new maze through dialog
      * Saves the maze if everything is OK
-     * Calls cancel button handler if the level name was not properly filled
+     * Shows a toast and recalls the dialog if the room name if empty or there was a error while saving
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to save
@@ -125,8 +124,12 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     public void onDialogPositiveClick(SaveDialogFragment dialog, String levelName)
     {
         if (levelName.length() == 0) {
-            this.onDialogNegativeClick(dialog);
-
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_save_level_name_empty, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.saveAction();
+    
             return;
         }
 
@@ -140,7 +143,8 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
             fp.write(xmlWriter.getContent().getBytes());
             fp.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            this.onDialogNegativeClick(dialog);
+            this.saveAction();
         }
     }
 
@@ -176,7 +180,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to load a new maze through dialog
      * Loads the maze if everything is OK
-     * Calls cancel button handler if the level name was not properly filled
+     * Calls cancel button handler if the level name was not properly filled and recalls the dialog
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to load
@@ -200,6 +204,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
 //          XMLReader xmlReader = new XMLReader(content.toString());*/
         } catch (IOException e) {
             this.onDialogNegativeClick(dialog);
+            this.loadAction();
         }
     }
 
@@ -235,7 +240,7 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     /**
      * Handles the OK button when trying to add a new room through dialog
      * Adds the room to the maze if everything is OK
-     * Calls cancel button handler if the room name was not properly filled
+     * Shows a toast and recalls the dialog if the room name if empty or already referenced
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the room to add
@@ -246,12 +251,24 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     public void onDialogPositiveClick(NewRoomDialogFragment dialog, String roomName)
     {
         if (roomName.length() == 0) {
-            this.onDialogNegativeClick(dialog);
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_room_name_empty, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.newRoomAction();
 
             return;
         }
 
-        this.maze.addRoom(MazeBuilder.newRoom(roomName));
+        try {
+            this.maze.addRoom(MazeBuilder.newRoom(roomName));
+        } catch (RuntimeException e) {
+            Toast
+                .makeText(this.getApplicationContext(), R.string.builder_room_already_referenced, Toast.LENGTH_LONG)
+                .show()
+            ;
+            this.newIOAction();
+        }
     }
 
     /**
@@ -288,6 +305,17 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
             return;
         }
 
-        
+        DialogFragment loadDialog = new NewIODialogFragment();
+        loadDialog.show(this.getFragmentManager(), "NewIODialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(NewIODialogFragment dialog, String from, String to, boolean twoWay)
+    {
+    }
+
+    @Override
+    public void onDialogNegativeClick(NewIODialogFragment dialog)
+    {
     }
 }

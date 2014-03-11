@@ -22,6 +22,9 @@ public class LoadDialogFragment extends DialogFragment
     private String[] files;
     private LoadDialogListener listener;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
@@ -48,6 +51,9 @@ public class LoadDialogFragment extends DialogFragment
         return alert.create();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttach(Activity activity)
     {

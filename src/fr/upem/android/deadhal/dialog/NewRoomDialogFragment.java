@@ -20,6 +20,9 @@ public class NewRoomDialogFragment extends DialogFragment
     private NewRoomDialogListener listener;
     private EditText roomName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
@@ -28,6 +31,7 @@ public class NewRoomDialogFragment extends DialogFragment
 
         alert
             .setTitle(R.string.builder_menu_room)
+            .setMessage(R.string.builder_room_name)
             .setView(this.roomName)
             .setPositiveButton(R.string.builder_room_ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -48,6 +52,9 @@ public class NewRoomDialogFragment extends DialogFragment
         return alert.create();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttach(Activity activity)
     {
