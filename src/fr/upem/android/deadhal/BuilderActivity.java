@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 import fr.upem.android.deadhal.dialog.LoadDialogFragment;
 import fr.upem.android.deadhal.dialog.NewIODialogFragment;
@@ -49,13 +48,9 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_builder);
 
-        this.maze                   = new Maze();
-        LinearLayout linearLayout   = (LinearLayout) this.findViewById(R.id.linearLayout);
-        Switch sw                   = new Switch(this.getApplicationContext());
-        BuilderView mView           = new BuilderView(this, sw);
-
-        sw.setText(R.string.builder_switch_rotation);
-        linearLayout.addView(sw);
+        this.maze = new Maze();
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
+        BuilderView mView = new BuilderView(this);
         linearLayout.addView(mView);
     }
 
@@ -318,4 +313,8 @@ public class BuilderActivity extends FragmentActivity implements SaveDialogFragm
     public void onDialogNegativeClick(NewIODialogFragment dialog)
     {
     }
+
+	public Maze getMaze() {
+		return this.maze;
+	}
 }
