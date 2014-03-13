@@ -3,17 +3,24 @@ package fr.upem.android.deadhal.utils;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
+import android.widget.Toast;
+
+import fr.upem.android.deadhal.R;
 
 public class MazeDrawer {
 
 	public static void drawRoom(Room r, Canvas canvas) {
-		
+
 		Paint paintRoom = new Paint();
 		paintRoom.setStyle(Paint.Style.FILL);
 		paintRoom.setColor(Color.rgb(145, 190, 242));
@@ -25,7 +32,7 @@ public class MazeDrawer {
 		Paint paintRoomInterest = new Paint();
 		paintRoomInterest.setStyle(Paint.Style.FILL);
 		paintRoomInterest.setColor(Color.YELLOW);
-		
+
 		int xleft = r.getXLeft();
 		int ytop = r.getYTop();
 		int xright = r.getXRight();
@@ -45,19 +52,21 @@ public class MazeDrawer {
 			canvas.drawText(r.getName(), xleft, ytop
 					+ r.getInterest().getFontSize(), paintRoomInterest);
 		}
+
 		canvas.restore();
-		
+
 	}
 
-	public static void drawInputs(Room r, Canvas canvas, LinkedRoom input, Point rotatedPointRoom) {
+	public static void drawInputs(Room r, Canvas canvas, LinkedRoom input,
+			Point rotatedPointRoom) {
 		Paint paintInputs = new Paint();
 		paintInputs.setStyle(Paint.Style.FILL);
 		paintInputs.setColor(Color.DKGRAY);
 		Point linkedPoint = input.getEndingPoint();
-		Point RotatedlinkedPoint = Rooms.getnewRotatedPoint((new Point(
-				linkedPoint.x, linkedPoint.y)), new Point(input
-				.getRoom().getX(), input.getRoom().getY()), input
-				.getRoom().getRotation());
+		Point RotatedlinkedPoint = Rooms
+				.getnewRotatedPoint((new Point(linkedPoint.x, linkedPoint.y)),
+						new Point(input.getRoom().getX(), input.getRoom()
+								.getY()), input.getRoom().getRotation());
 		canvas.drawLine(rotatedPointRoom.x, rotatedPointRoom.y,
 				RotatedlinkedPoint.x, RotatedlinkedPoint.y, paintInputs);
 		canvas.save();
@@ -79,5 +88,17 @@ public class MazeDrawer {
 				paintInputs);
 		canvas.restore();
 	}
-	
+
+	public static void drawCharacter(Bitmap bm, Room r, Canvas canvas) {
+		Paint paintRoom = new Paint();
+		paintRoom.setStyle(Paint.Style.FILL);
+		paintRoom.setColor(Color.rgb(145, 190, 242));
+
+		canvas.save();
+		float centerx = r.getX();
+		float centery = r.getY();
+		canvas.rotate(r.getRotation(), centerx, centery);
+		canvas.drawBitmap(bm, r.getXRight()-bm.getWidth(), r.getYBottom()-bm.getHeight(), paintRoom);
+		canvas.restore();
+	}
 }

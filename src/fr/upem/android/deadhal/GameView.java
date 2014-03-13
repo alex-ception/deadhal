@@ -11,21 +11,28 @@ import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 @SuppressLint("WrongCall")
-public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
+	private Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.yoshi);
+	int bmWidth;
+	int bmHeight;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
 	Maze maze;
@@ -36,11 +43,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	float endSpanX;
 	float endSpanY;
 
-	Switch RotateSwitch;
-
-	float beginRotate;
-	float endRotate;
-
 	Room selectedRoom;
 
 	private float mLastTouchX;
@@ -48,38 +50,25 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private int mActivePointerId = INVALID_POINTER_ID;
 
 	private ScaleGestureDetector mScaleDetector;
-	private RotateGestureDetector mRotateDetector;
 
-	public BuilderView(BuilderActivity context) {
-		super(context);
+	@SuppressLint("NewApi")
+	public GameView(GameActivity gameActivity) {
+		super(gameActivity);
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this);
 		mThread = new DrawingThread();
-		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-		mRotateDetector = new RotateGestureDetector(context,
-				new RotateListener());
+		mScaleDetector = new ScaleGestureDetector(gameActivity,
+				new ScaleListener());
 
-		/*
-		 * Room r1 = new Room("room 1 ", "room 1 "); Room r2 = new
-		 * Room("salle de réception", "salle de réception");
-		 * r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
-		 * r2.setX(200).setY(200).setWidth(500).setHeight(200).setRotation(45);
-		 * LinkedRoom lr1 = new
-		 * LinkedRoom(fr.upem.android.deadhal.maze.Direction.WEST, r2);
-		 * r1.getInputs().addSouth(lr1); r1.getInputs().addNorth(lr1);
-		 * r1.getInputs().addEast(lr1); r1.getInputs().addWest(lr1);
-		 * rooms.add(r1); rooms.add(r2);
-		 */
-		selectedRoom = null;
-		RotateSwitch = (Switch) context.findViewById(R.id.RotateSwitch);
-		this.maze = context.getMaze();
+		this.maze = gameActivity.getMaze();
+		bmWidth=75;
+		bmHeight=75;
 	}
 
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		mScaleDetector.onTouchEvent(event);
-		mRotateDetector.onTouchEvent(event);
 		final int action = event.getAction();
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN: {
@@ -88,6 +77,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			mLastTouchX = x;
 			mLastTouchY = y;
 			mActivePointerId = event.getPointerId(0);
+			selectedRoom = getSelectedRoom(mLastTouchX, mLastTouchY);
+			moveTo(selectedRoom);
 			break;
 		}
 
@@ -97,20 +88,15 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 			final float y = event.getY(pointerIndex);
 			selectedRoom = getSelectedRoom(mLastTouchX, mLastTouchY);
 			// Only move if the ScaleGestureDetector isn't processing a gesture.
-			if (!mScaleDetector.isInProgress()
-					&& !mRotateDetector.isInProgress()) {
+			if (!mScaleDetector.isInProgress()) {
 
 				final float dx = x - mLastTouchX;
 				final float dy = y - mLastTouchY;
-				if (selectedRoom != null) {
-					selectedRoom.setX((int) (selectedRoom.getX() + dx));
-					selectedRoom.setY((int) (selectedRoom.getY() + dy));
-				} else {
-					for (Room r : maze.getRooms().values()) {
 
-						r.setX((int) (r.getX() + dx));
-						r.setY((int) (r.getY() + dy));
-					}
+				for (Room r : maze.getRooms().values()) {
+
+					r.setX((int) (r.getX() + dx));
+					r.setY((int) (r.getY() + dy));
 				}
 
 				invalidate();
@@ -149,6 +135,47 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
+	private void moveTo(Room selectedRoom2) {
+		for (Room r : maze.getRooms().values()) {
+			if (r.isOccuped()) {
+				if (wayIsGood(r, selectedRoom2)) {
+					r.setOccuped(false);
+					selectedRoom.setOccuped(true);
+					return;
+				}
+				else{
+					return;
+				}
+			}
+		}
+		selectedRoom.setOccuped(true);
+		
+	}
+
+	private boolean wayIsGood(Room r, Room selectedRoom2) {
+		for (LinkedRoom lr : r.getOutputs().getEast()) {
+			if (lr.getRoom().equals(selectedRoom2)) {
+				return true;
+			}
+		}
+		for (LinkedRoom lr :  r.getOutputs().getWest()) {
+			if (lr.getRoom().equals(selectedRoom2)) {
+				return true;
+			}
+		}
+		for (LinkedRoom lr :  r.getOutputs().getNorth()) {
+			if (lr.getRoom().equals(selectedRoom2)) {
+				return true;
+			}
+		}
+		for (LinkedRoom lr :  r.getOutputs().getSouth()) {
+			if (lr.getRoom().equals(selectedRoom2)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
 		ArrayList<Room> temp = new ArrayList<Room>();
 		for (Room r : maze.getRooms().values()) {
@@ -159,18 +186,22 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				temp.add(r);
 			}
 		}
-		if (temp.size()>0)
+		if (temp.size() > 0)
 			return temp.get(0);
 		return null;
 	}
+
 	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
-
 		for (Room r : maze.getRooms().values()) {
 			MazeDrawer.drawRoom(r, canvas);
+			if(r.isOccuped()){
+				Bitmap bitmap = Bitmap.createScaledBitmap(bm, bmWidth, bmHeight, false);
+				MazeDrawer.drawCharacter(bitmap,r,canvas);
+			}
 		}
 
 		for (Room r : maze.getRooms().values()) {
@@ -200,26 +231,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				MazeDrawer.drawInputs(r, canvas, input, RotatedPointRoom);
 			}
 		}
-		/*
-		 * Bitmap myicon = BitmapFactory.decodeResource(getResources(),
-		 * R.drawable.pinguin); Bitmap bitmap =
-		 * Bitmap.createScaledBitmap(myicon, 300, 300, false);
-		 * canvas.drawColor(Color.BLACK); canvas.drawBitmap(bitmap, 0, 0,
-		 * paintRoom);
-		 * 
-		 * Rect r = new Rect(xleft, ytop, xright, ybottom); canvas.save(); int
-		 * centerx = (xleft + xright) / 2; int centery = (ytop + ybottom) / 2;
-		 * canvas.rotate(45, centerx, centery); canvas.drawRect(r, paintRoom);
-		 * paintRoomName.setTextSize(30);
-		 * paintRoomName.setTextAlign(Align.CENTER);
-		 * canvas.drawText("ROOOOOM !", centerx, centery, paintRoomName);
-		 * paintRoomInterest.setTextSize(25);
-		 * paintRoomName.setTextAlign(Align.LEFT);
-		 * canvas.drawText("Interest MAN !", xleft, ytop + 25,
-		 * paintRoomInterest);
-		 * 
-		 * canvas.restore();
-		 */
 	}
 
 	@Override
@@ -276,35 +287,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	private class RotateListener extends
-			RotateGestureDetector.SimpleOnRotateGestureListener {
-		@Override
-		public boolean onRotate(RotateGestureDetector detector) {
-			if (RotateSwitch.isChecked()) {
-				endRotate = detector.getRotationDegreesDelta();
-				if (selectedRoom != null) {
-					selectedRoom.setRotation((float) (selectedRoom
-							.getRotation() + (beginRotate - endRotate)));
-				}
-			}
-			return true;
-		}
-
-		@Override
-		public boolean onRotateBegin(RotateGestureDetector detector) {
-			beginRotate = detector.getRotationDegreesDelta();
-			return true;
-		}
-
-		@Override
-		public void onRotateEnd(RotateGestureDetector detector) {
-
-		}
-	}
-
 	private class ScaleListener extends
 			ScaleGestureDetector.SimpleOnScaleGestureListener {
-		@SuppressLint("NewApi")
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector) {
 			beginSpan = (int) detector.getCurrentSpan();
@@ -323,42 +307,18 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		public void onScaleEnd(ScaleGestureDetector detector) {
 
 			endSpan = detector.getCurrentSpan();
-			endSpanX = detector.getCurrentSpanX();
-			endSpanY = detector.getCurrentSpanY();
-			if (selectedRoom != null) {
-				if (!RotateSwitch.isChecked()) {
-					float XPercent = ((endSpanX * 100) / beginSpanX) / 100;
-					float YPercent = ((endSpanY * 100) / beginSpanY) / 100;
-					selectedRoom
-							.setHeight((int) (selectedRoom.getHeight() * XPercent));
-					selectedRoom
-							.setWidth((int) (selectedRoom.getWidth() * YPercent));
-					selectedRoom.setNameFontSize(selectedRoom.getNameFontSize()
-							* (XPercent * YPercent));
-					if (selectedRoom.getInterest() != null) {
-						selectedRoom.getInterest().setFontSize(
-								selectedRoom.getInterest().getFontSize()
-										* (XPercent * YPercent));
-					}
-				}
-			} else {
-				for (Room r : maze.getRooms().values()) {
-					float percentScale = ((endSpan * 100) / beginSpan) / 100;
-					if (!RotateSwitch.isChecked()) {
+			for (Room r : maze.getRooms().values()) {
+				float percentScale = ((endSpan * 100) / beginSpan) / 100;
 
-						r.setHeight((int) (r.getHeight() * percentScale));
-						r.setWidth((int) (r.getWidth() * percentScale));
-						r.setNameFontSize(r.getNameFontSize() * (percentScale));
-						if (r.getInterest() != null) {
-							r.getInterest().setFontSize(
-									r.getInterest().getFontSize()
-											* (percentScale));
-						}
-						r.setX((int) (r.getX() * percentScale));
-						r.setY((int) (r.getY() * percentScale));
-					}
-
+				r.setHeight((int) (r.getHeight() * percentScale));
+				r.setWidth((int) (r.getWidth() * percentScale));
+				r.setNameFontSize(r.getNameFontSize() * (percentScale));
+				if (r.getInterest() != null) {
+					r.getInterest().setFontSize(
+							r.getInterest().getFontSize() * (percentScale));
 				}
+				r.setX((int) (r.getX() * percentScale));
+				r.setY((int) (r.getY() * percentScale));
 			}
 
 		}

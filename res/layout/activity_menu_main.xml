@@ -10,20 +10,28 @@
 
     <Button
         android:id="@+id/menu_main_button_builder"
-        android:text="@string/menu_main_button_builder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:onClick="buttonsOnClick"
-        />
+        android:text="@string/menu_main_button_builder" />
+
+    <Button
+        android:id="@+id/menu_main_button_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_main_button_builder"
+        android:layout_centerHorizontal="true"
+        android:onClick="buttonsOnClick"
+        android:text="@string/menu_main_button_game" />
 
     <Button
         android:id="@+id/menu_main_button_quit"
-        android:text="@string/menu_main_button_quit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/menu_main_button_game"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/menu_main_button_builder"
         android:onClick="buttonsOnClick"
-        />
+        android:text="@string/menu_main_button_quit" />
+
 </RelativeLayout>

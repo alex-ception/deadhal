@@ -26,6 +26,10 @@
             android:name="fr.upem.android.deadhal.BuilderActivity"
             android:label="@string/builder_title" >
         </activity>
+        <activity
+            android:name="fr.upem.android.deadhal.GameActivity"
+            android:label="@string/title_activity_game" >
+        </activity>
     </application>
 
 </manifest>

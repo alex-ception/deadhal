@@ -26,9 +26,13 @@ public class MenuMainActivity extends Activity
 	public void buttonsOnClick(View view)
 	{
 	    switch (view.getId()) {
-	        case R.id.menu_main_button_builder:
+		    case R.id.menu_main_button_builder:
 	            Intent builder = new Intent(this, BuilderActivity.class);
 	            this.startActivityForResult(builder, 0);
+	            break;
+		    case R.id.menu_main_button_game:
+	            Intent game = new Intent(this, GameActivity.class);
+	            this.startActivityForResult(game, 0);
 	            break;
 	        case R.id.menu_main_button_quit:
 	            this.finish();
