@@ -13,7 +13,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -340,7 +339,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	 * @author Remy BARBOSA
 	 * @author Houmam WEHBEH
 	 */
-	private class DrawingThread extends Thread {
+	private class DrawingThread extends Thread
+	{
 		boolean keepDrawing = true;
 
 		/**
@@ -379,13 +379,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	 * @author Remy BARBOSA
 	 * @author Houmam WEHBEH
 	 */
-	private class ScaleListener extends
-			ScaleGestureDetector.SimpleOnScaleGestureListener {
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+	{
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
+		public boolean onScaleBegin(ScaleGestureDetector detector)
+		{
 			beginSpan = (int) detector.getCurrentSpan();
 			beginSpanX = (int) detector.getCurrentSpanX();
 			beginSpanY = (int) detector.getCurrentSpanY();
@@ -396,9 +397,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		 * {@inheritDoc}
 		 */
 		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
+		public boolean onScale(ScaleGestureDetector detector)
+		{
+            endSpan = detector.getCurrentSpan();
+            for (Room r : maze.getRooms().values()) {
+                float percentScale = ((endSpan * 100) / beginSpan) / 100;
 
-			return true;
+                r.setHeight((int) (r.getHeight() * percentScale));
+                r.setWidth((int) (r.getWidth() * percentScale));
+                r.setX((int) (r.getX() * percentScale));
+                r.setY((int) (r.getY() * percentScale));
+            }
+            beginSpan = endSpan;
+
+            return true;
 		}
 
 		/**
@@ -406,17 +418,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		 */
 		@SuppressLint("NewApi")
 		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-			endSpan = detector.getCurrentSpan();
-			for (Room r : maze.getRooms().values()) {
-				float percentScale = ((endSpan * 100) / beginSpan) / 100;
-
-				r.setHeight((int) (r.getHeight() * percentScale));
-				r.setWidth((int) (r.getWidth() * percentScale));
-				r.setX((int) (r.getX() * percentScale));
-				r.setY((int) (r.getY() * percentScale));
-			}
-			beginSpan = endSpan;
+		public void onScaleEnd(ScaleGestureDetector detector)
+		{
 		}
 	}
 
@@ -424,9 +427,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
      * {@inheritDoc}
      */
 	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// do nothing
-
+	public void onAccuracyChanged(Sensor sensor, int accuracy)
+	{
 	}
 
 	/**
@@ -439,14 +441,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 				if ((Math.abs(event.values[0])) > (Math.abs(event.values[1]))
 						&& (Math.abs(event.values[0])) > 8) {
 					if (event.values[0] > 0) {
-						Log.e("west",""+ (event.values[0]));
 						ArrayList<LinkedRoom> west = selectedRoom.getOutputs().getWest();
 						if (west.size()>0){
 							moveTo(west.get(0)
 									.getRoom());
 						}
 					} else {
-						Log.e("east",""+ (event.values[0]));
 						ArrayList<LinkedRoom> east = selectedRoom.getOutputs().getEast();
 						if (east.size()>0){
 							moveTo(east.get(0)
@@ -456,16 +456,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 					}
 				} else if ((Math.abs(event.values[1])) > 8) {
 					if (event.values[1] > 1) {
-						Log.e("south",""+ (event.values[1]));
 						ArrayList<LinkedRoom> south = selectedRoom.getOutputs().getSouth();
 						if (south.size()>0){
-							Log.e("south",""+ south.get(0)
-									.getRoom());
 							moveTo(south.get(0)
 									.getRoom());
 						}
 					} else {
-						Log.e("nrth",""+ (event.values[1]));
 						ArrayList<LinkedRoom> north = selectedRoom.getOutputs().getNorth();
 						if (north.size()>0){
 							moveTo(north.get(0)
