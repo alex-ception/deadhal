@@ -393,6 +393,34 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		@Override
 		public boolean onScale(ScaleGestureDetector detector)
 		{
+			endSpan  = detector.getCurrentSpan();
+			endSpanX = detector.getCurrentSpanX();
+			endSpanY = detector.getCurrentSpanY();
+
+			if (selectedRoom != null) {
+				if (!RotateSwitch.isChecked()) {
+					float XPercent = ((endSpanX * 100) / beginSpanX) / 100;
+					float YPercent = ((endSpanY * 100) / beginSpanY) / 100;
+					selectedRoom
+							.setHeight((int) (selectedRoom.getHeight() * YPercent));
+					selectedRoom
+							.setWidth((int) (selectedRoom.getWidth() * XPercent));
+				}
+			} else {
+				for (Room r : baContext.getMaze().getRooms().values()) {
+					float percentScale = ((endSpan * 100) / beginSpan) / 100;
+					if (!RotateSwitch.isChecked()) {
+
+						r.setHeight((int) (r.getHeight() * percentScale));
+						r.setWidth((int) (r.getWidth() * percentScale));
+						r.setX((int) (r.getX() * percentScale));
+						r.setY((int) (r.getY() * percentScale));
+					}
+				}
+			}
+			beginSpan = endSpan;
+			beginSpanX = endSpanX ;
+			beginSpanY = endSpanY ;
 			return true;
 		}
 
@@ -403,44 +431,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		@Override
 		public void onScaleEnd(ScaleGestureDetector detector)
 		{
-			endSpan  = detector.getCurrentSpan();
-			endSpanX = detector.getCurrentSpanX();
-			endSpanY = detector.getCurrentSpanY();
-
-			if (selectedRoom != null) {
-				if (!RotateSwitch.isChecked()) {
-					float XPercent = ((endSpanX * 100) / beginSpanX) / 100;
-					float YPercent = ((endSpanY * 100) / beginSpanY) / 100;
-					selectedRoom
-							.setHeight((int) (selectedRoom.getHeight() * XPercent));
-					selectedRoom
-							.setWidth((int) (selectedRoom.getWidth() * YPercent));
-					selectedRoom.setNameFontSize(selectedRoom.getNameFontSize()
-							* (XPercent * YPercent));
-					if (selectedRoom.getInterest() != null) {
-						selectedRoom.getInterest().setFontSize(
-								selectedRoom.getInterest().getFontSize()
-										* (XPercent * YPercent));
-					}
-				}
-			} else {
-				for (Room r : baContext.getMaze().getRooms().values()) {
-					float percentScale = ((endSpan * 100) / beginSpan) / 100;
-					if (!RotateSwitch.isChecked()) {
-
-						r.setHeight((int) (r.getHeight() * percentScale));
-						r.setWidth((int) (r.getWidth() * percentScale));
-						r.setNameFontSize(r.getNameFontSize() * (percentScale));
-						if (r.getInterest() != null) {
-							r.getInterest().setFontSize(
-									r.getInterest().getFontSize()
-											* (percentScale));
-						}
-						r.setX((int) (r.getX() * percentScale));
-						r.setY((int) (r.getY() * percentScale));
-					}
-				}
-			}
+			
 		}
 	}
 }

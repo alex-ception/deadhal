@@ -50,14 +50,15 @@ public class MazeDrawer
 		float centery = r.getY();
 		canvas.rotate(r.getRotation(), centerx, centery);
 		canvas.drawRect(rect, paintRoom);
-		paintRoomName.setTextSize(r.getNameFontSize());
+		paintRoomName.setTextSize((int)(r.getWidth()*0.1));
 		paintRoomName.setTextAlign(Align.CENTER);
 		canvas.drawText(r.getName(), centerx, centery, paintRoomName);
 		if (r.getInterest() != null) {
-			paintRoomInterest.setTextSize(r.getInterest().getFontSize());
+			int interestFontSize= (int)(r.getWidth()*0.08);
+			paintRoomInterest.setTextSize(interestFontSize);
 			paintRoomName.setTextAlign(Align.LEFT);
 			canvas.drawText(r.getName(), xleft, ytop
-					+ r.getInterest().getFontSize(), paintRoomInterest);
+					+ interestFontSize, paintRoomInterest);
 		}
 
 		canvas.restore();

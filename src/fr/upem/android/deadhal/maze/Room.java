@@ -16,7 +16,6 @@ public class Room
 {
 	private final String id;
 	private String name;
-	private float nameFontSize;
 	private int x;
 	private int y;
 	private int width;
@@ -42,7 +41,6 @@ public class Room
 		this.outputs = new Output();
 		this.id = (id == null) ? UUID.randomUUID().toString() : id;
 		this.name = name;
-		this.nameFontSize = 25;
 		this.occuped = false;
 	}
 
@@ -108,14 +106,6 @@ public class Room
 	public Interest getInterest()
 	{
 		return this.interest;
-	}
-
-    /**
-     * @return The font size (graphic rendering)
-     */
-	public float getNameFontSize()
-	{
-		return this.nameFontSize;
 	}
 
 	/**
@@ -210,19 +200,6 @@ public class Room
 	}
 
 	/**
-	 * Sets the font size (graphic rendering)
-	 * 
-	 * @param nameFontSize The font size
-     * @return The current Room
-	 */
-	public Room setNameFontSize(float nameFontSize)
-	{
-		this.nameFontSize = nameFontSize;
-
-		return this;
-	}
-
-	/**
 	 * @return The inputs of the room
 	 */
 	public Input getInputs()
@@ -243,7 +220,7 @@ public class Room
 	 */
 	public int getXLeft()
 	{
-		return getX() - (getHeight() / 2);
+		return getX() - (getWidth() / 2);
 	}
 
 	/**
@@ -251,7 +228,7 @@ public class Room
 	 */
 	public int getXRight()
 	{
-		return getX() + (getHeight() / 2);
+		return getX() + (getWidth() / 2);
 	}
 
     /**
@@ -259,7 +236,7 @@ public class Room
      */
 	public int getYTop()
 	{
-		return getY() - (getWidth() / 2);
+		return getY() - (getHeight() / 2);
 	}
 
     /**
@@ -267,7 +244,7 @@ public class Room
      */
 	public int getYBottom()
 	{
-		return getY() + (getWidth() / 2);
+		return getY() + (getHeight() / 2);
 	}
 
     /**

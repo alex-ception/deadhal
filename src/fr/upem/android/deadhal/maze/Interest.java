@@ -12,7 +12,6 @@ public class Interest
 {
     private final String id;
     private final String name;
-    private float fontSize;
 
     /**
      * Class constructor
@@ -23,7 +22,6 @@ public class Interest
     {
         this.id         = name;
         this.name       = name;
-        this.fontSize   = 20;
     }
 
     /**
@@ -42,24 +40,4 @@ public class Interest
         return this.name;
     }
 
-    /**
-     * @return The font size (graphic rendering)
-     */
-    public float getFontSize()
-    {
-        return this.fontSize;
-    }
-
-    /**
-     * Sets the font size (graphic rendering)
-     * 
-     * @param fontSize The font size
-     * @return The current Interest
-     */
-    public Interest setFontSize(float fontSize)
-    {
-        this.fontSize = fontSize;
-
-        return this;
-    }
 }
