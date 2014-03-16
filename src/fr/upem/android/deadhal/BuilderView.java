@@ -12,7 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Switch;
 import fr.upem.android.deadhal.maze.LinkedRoom;
-import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
@@ -32,7 +31,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
-	Maze maze;
 	float beginSpan;
 	float beginSpanX;
 	float beginSpanY;
@@ -41,6 +39,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	float endSpanY;
 
 	Switch RotateSwitch;
+	BuilderActivity baContext;
 
 	float beginRotate;
 	float endRotate;
@@ -68,9 +67,9 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		mRotateDetector   = new RotateGestureDetector(context, new RotateListener());
 		selectedRoom      = null;
 		RotateSwitch      = (Switch) context.findViewById(R.id.RotateSwitch);
-		this.maze         = context.getMaze();
 
 		mSurfaceHolder.addCallback(this);
+		this.baContext = (BuilderActivity) context;
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 					selectedRoom.setX((int) (selectedRoom.getX() + dx));
 					selectedRoom.setY((int) (selectedRoom.getY() + dy));
 				} else {
-					for (Room r : maze.getRooms().values()) {
+					for (Room r : baContext.getMaze().getRooms().values()) {
 
 						r.setX((int) (r.getX() + dx));
 						r.setY((int) (r.getY() + dy));
@@ -161,11 +160,11 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
 
-		for (Room r : maze.getRooms().values()) {
+		for (Room r : baContext.getMaze().getRooms().values()) {
 			MazeDrawer.drawRoom(r, canvas);
 		}
 
-		for (Room r : maze.getRooms().values()) {
+		for (Room r : baContext.getMaze().getRooms().values()) {
 			for (LinkedRoom input : r.getInputs().getEast()) {
 				Point RotatedPointRoom = Rooms.getnewRotatedPoint(
 						(new Point(r.getXRight(), r.getY())),
@@ -260,7 +259,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
 		ArrayList<Room> temp = new ArrayList<Room>();
-		for (Room r : maze.getRooms().values()) {
+		for (Room r : baContext.getMaze().getRooms().values()) {
 			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
 					.getXRight())
 					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
@@ -408,7 +407,7 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 							.setWidth((int) (selectedRoom.getWidth() * XPercent));
 				}
 			} else {
-				for (Room r : maze.getRooms().values()) {
+				for (Room r : baContext.getMaze().getRooms().values()) {
 					float percentScale = ((endSpan * 100) / beginSpan) / 100;
 					if (!RotateSwitch.isChecked()) {
 

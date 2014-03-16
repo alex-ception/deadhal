@@ -1,12 +1,6 @@
 package fr.upem.android.deadhal;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +17,7 @@ import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.maze.XMLReader;
 import fr.upem.android.deadhal.maze.XMLWriter;
+import fr.upem.android.deadhal.utils.ExternalStorageIO;
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
 /**
@@ -134,11 +129,7 @@ implements
 
         try {
             XMLWriter xmlWriter = new XMLWriter(this.maze);
-            FileOutputStream fp = this.openFileOutput(xmlWriter.getFileName(), Context.MODE_PRIVATE);
-            Log.e("DH", "Save to " + xmlWriter.getFileName());
-            Log.e("DH", xmlWriter.getContent());
-            fp.write(xmlWriter.getContent().getBytes());
-            fp.close();
+            ExternalStorageIO.save(xmlWriter);
         } catch (Exception e) {
             e.printStackTrace();
             this.onDialogNegativeClick(dialog);
@@ -182,19 +173,9 @@ implements
     @Override
     public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName)
     {
-        InputStream fp;
         try {
-            fp = this.openFileInput(levelName);
-
-            String temp;
-            InputStreamReader isr   = new InputStreamReader(fp);
-            BufferedReader br       = new BufferedReader(isr);
-            StringBuilder content   = new StringBuilder();
-
-            while ((temp = br.readLine()) != null)
-                content.append(temp);
-            Log.e("DH", content.toString());
-            XMLReader xmlReader = new XMLReader(this.maze, content.toString());
+            Log.e("DH", ExternalStorageIO.load(levelName));
+            XMLReader xmlReader = new XMLReader(this.maze, ExternalStorageIO.load(levelName));
             this.maze = xmlReader.getMaze();
         } catch (Exception e) {
             this.onDialogNegativeClick(dialog);

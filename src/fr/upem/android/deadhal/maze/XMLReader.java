@@ -46,6 +46,7 @@ public class XMLReader
         this.maze                       = maze;
         this.document                   = builder.parse(new InputSource(new StringReader(xmlString)));
 
+        MazeBuilder.getInstance().clean();
         this.maze.clean();
         this.build();
     }
