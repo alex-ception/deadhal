@@ -7,6 +7,8 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
+    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +17,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="fr.upem.android.deadhal.MenuMainActivity"
-            android:label="@string/menu_main_title" >
+            android:label="@string/menu_main_title"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,12 +27,15 @@
         </activity>
         <activity
             android:name="fr.upem.android.deadhal.BuilderActivity"
-            android:label="@string/builder_title" >
+            android:label="@string/builder_title"
+            android:screenOrientation="landscape"
+            >
         </activity>
         <activity
             android:name="fr.upem.android.deadhal.GameActivity"
-            android:label="@string/title_activity_game" >
+            android:label="@string/title_activity_game"
+            android:screenOrientation="landscape"
+            >
         </activity>
     </application>
-
 </manifest>
