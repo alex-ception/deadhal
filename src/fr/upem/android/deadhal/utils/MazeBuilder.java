@@ -68,6 +68,18 @@ public class MazeBuilder
     }
 
     /**
+     * Clear the list of rooms names
+     * 
+     * @return The current MazeBuilder
+     */
+    public MazeBuilder clean()
+    {
+        this.roomNames.clear();
+
+        return this;
+    }
+
+    /**
      * Instantiates a new room
      * 
      * @param id The id of the room
