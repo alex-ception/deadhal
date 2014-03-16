@@ -90,7 +90,7 @@ public class GameActivity extends FragmentActivity implements LoadDialogFragment
     public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName)
     {
         try {
-            Log.e("DH", ExternalStorageIO.load(levelName));
+            Log.v("DH", ExternalStorageIO.load(levelName));
             XMLReader xmlReader = new XMLReader(this.maze, ExternalStorageIO.load(levelName));
             this.maze = xmlReader.getMaze();
             

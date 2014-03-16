@@ -10,7 +10,6 @@ import fr.upem.android.deadhal.R;
 import fr.upem.android.deadhal.maze.Direction;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 
-@SuppressLint("DefaultLocale")
 /**
  * A class representing a dialog for a new IO
  * 

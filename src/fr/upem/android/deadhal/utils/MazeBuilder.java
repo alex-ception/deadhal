@@ -138,7 +138,7 @@ public class MazeBuilder
      */
     public static void newIo(Room from, int directionFrom, Room to, int directionTo, boolean twoWay)
     {
-        Log.e("DH", from.getName() + "[" + directionFrom + "] => " + to.getName() + "[" + directionTo + "] twoWay(" + twoWay + ")");
+        Log.v("DH", from.getName() + "[" + directionFrom + "] => " + to.getName() + "[" + directionTo + "] twoWay(" + twoWay + ")");
         LinkedRoom outputLinkedRoom = new LinkedRoom(directionTo, to);
         LinkedRoom inputLinkedRoom  = new LinkedRoom(directionFrom, from);
 

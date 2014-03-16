@@ -2,7 +2,6 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -25,7 +24,6 @@ import fr.upem.android.deadhal.utils.RotateGestureDetector;
  * @author Remy BARBOSA
  * @author Houmam WEHBEH
  */
-@SuppressLint({ "WrongCall", "ViewConstructor" })
 public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 {
 	private static final int INVALID_POINTER_ID = -1;
@@ -75,7 +73,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
@@ -153,7 +150,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * {@inheritDoc}
      */
-	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
@@ -376,7 +372,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	    /**
 	     * {@inheritDoc}
 	     */
-		@SuppressLint("NewApi")
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector)
 		{
@@ -427,7 +422,6 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
         /**
          * {@inheritDoc}
          */
-		@SuppressLint("NewApi")
 		@Override
 		public void onScaleEnd(ScaleGestureDetector detector)
 		{

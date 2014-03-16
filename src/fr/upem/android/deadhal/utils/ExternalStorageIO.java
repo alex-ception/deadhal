@@ -40,8 +40,8 @@ public class ExternalStorageIO
 
         File file           = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), writer.getFileName());
         FileOutputStream fp = new FileOutputStream(file);
-        Log.e("DH", "Save to " + writer.getFileName());
-        Log.e("DH", writer.getContent());
+        Log.v("DH", "Save to " + writer.getFileName());
+        Log.v("DH", writer.getContent());
         fp.write(writer.getContent().getBytes());
         fp.close();
     }

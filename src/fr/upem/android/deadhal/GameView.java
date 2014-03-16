@@ -2,7 +2,6 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +31,6 @@ import fr.upem.android.deadhal.utils.Rooms;
  * @author Remy BARBOSA
  * @author Houmam WEHBEH
  */
-@SuppressLint({ "WrongCall", "ViewConstructor" })
 public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		SensorEventListener {
 	private static final int INVALID_POINTER_ID = -1;
@@ -61,7 +59,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	 * @param gameActivity
 	 *            The GameActivity instance
 	 */
-	@SuppressLint("NewApi")
 	public GameView(GameActivity gameActivity) {
 		super(gameActivity);
 		mSurfaceHolder = getHolder();
@@ -81,7 +78,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		mScaleDetector.onTouchEvent(event);
@@ -248,7 +244,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
@@ -416,7 +411,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		/**
 		 * {@inheritDoc}
 		 */
-		@SuppressLint("NewApi")
 		@Override
 		public void onScaleEnd(ScaleGestureDetector detector)
 		{

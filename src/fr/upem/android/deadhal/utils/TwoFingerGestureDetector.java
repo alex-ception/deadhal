@@ -1,6 +1,5 @@
 package fr.upem.android.deadhal.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
@@ -93,7 +92,6 @@ public abstract class TwoFingerGestureDetector extends BaseGestureDetector
      * 
      * @return Distance between pointers in pixels.
      */
-    @SuppressLint("FloatMath")
     public float getCurrentSpan()
     {
         if (mCurrLen == -1) {
@@ -110,7 +108,6 @@ public abstract class TwoFingerGestureDetector extends BaseGestureDetector
      * 
      * @return Previous distance between pointers in pixels.
      */
-    @SuppressLint("FloatMath")
     public float getPreviousSpan()
     {
         if (mPrevLen == -1) {
