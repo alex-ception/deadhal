@@ -2,13 +2,6 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
-import fr.upem.android.deadhal.maze.LinkedRoom;
-import fr.upem.android.deadhal.maze.Maze;
-import fr.upem.android.deadhal.maze.Room;
-import fr.upem.android.deadhal.utils.MazeDrawer;
-import fr.upem.android.deadhal.utils.Rooms;
-import fr.upem.android.deadhal.utils.RotateGestureDetector;
-
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +11,12 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Switch;
+import fr.upem.android.deadhal.maze.LinkedRoom;
+import fr.upem.android.deadhal.maze.Maze;
+import fr.upem.android.deadhal.maze.Room;
+import fr.upem.android.deadhal.utils.MazeDrawer;
+import fr.upem.android.deadhal.utils.Rooms;
+import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 /**
  * Controller handling logic for the level builder view
@@ -259,23 +258,24 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	 * 
 	 * @return The corresponding Room
 	 */
-    private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc)
-    {
-        ArrayList<Room> temp = new ArrayList<Room>();
-        for (Room r : maze.getRooms().values()) {
-            if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
-                    .getXRight())
-                    && (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
-                            .getYBottom())) {
-                temp.add(r);
-            }
-        }
-        if (temp.size()>0)
-            return temp.get(0);
-
-        return null;
-    }
-
+	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
+		ArrayList<Room> temp = new ArrayList<Room>();
+		for (Room r : maze.getRooms().values()) {
+			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
+					.getXRight())
+					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
+							.getYBottom())) {
+				temp.add(r);
+			}
+		}
+		if (temp.size()>0){
+			if(temp.size()>1){
+				return selectedRoom;
+			}
+			return temp.get(0);
+		}
+		return null;
+	}
     /**
      * Drawing thread
      * 

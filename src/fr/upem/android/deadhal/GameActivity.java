@@ -106,6 +106,12 @@ public class GameActivity extends FragmentActivity implements LoadDialogFragment
             Log.e("DH", content.toString());
             XMLReader xmlReader = new XMLReader(this.maze, content.toString());
             this.maze = xmlReader.getMaze();
+            
+            CharSequence text = "Clic on first Room";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
+            
         } catch (Exception e) {
             this.onDialogNegativeClick(dialog);
             this.loadAction();
