@@ -1,5 +1,13 @@
 package fr.upem.android.deadhal.maze;
 
+/**
+ * Class handling constant names for the XML representation of the maze
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class XMLRW
 {
     public static String ID_ROOT        = "maze";
