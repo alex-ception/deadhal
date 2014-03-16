@@ -2,37 +2,28 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.Toast;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
-import fr.upem.android.deadhal.utils.RotateGestureDetector;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.widget.Switch;
-import android.widget.Toast;
 
 @SuppressLint("WrongCall")
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
-	private Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.yoshi);
-	int bmWidth;
-	int bmHeight;
+	private Bitmap bm = BitmapFactory.decodeResource(getResources(),
+			R.drawable.yoshi);
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
 	Maze maze;
@@ -61,8 +52,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				new ScaleListener());
 
 		this.maze = gameActivity.getMaze();
-		bmWidth=75;
-		bmHeight=75;
 	}
 
 	@SuppressLint("NewApi")
@@ -142,14 +131,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					r.setOccuped(false);
 					selectedRoom.setOccuped(true);
 					return;
-				}
-				else{
+				} else {
+					CharSequence text = "You can't go in this room";
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(getContext(), text, duration);
+					toast.show();
 					return;
 				}
 			}
 		}
 		selectedRoom.setOccuped(true);
-		
+
 	}
 
 	private boolean wayIsGood(Room r, Room selectedRoom2) {
@@ -158,17 +150,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				return true;
 			}
 		}
-		for (LinkedRoom lr :  r.getOutputs().getWest()) {
+		for (LinkedRoom lr : r.getOutputs().getWest()) {
 			if (lr.getRoom().equals(selectedRoom2)) {
 				return true;
 			}
 		}
-		for (LinkedRoom lr :  r.getOutputs().getNorth()) {
+		for (LinkedRoom lr : r.getOutputs().getNorth()) {
 			if (lr.getRoom().equals(selectedRoom2)) {
 				return true;
 			}
 		}
-		for (LinkedRoom lr :  r.getOutputs().getSouth()) {
+		for (LinkedRoom lr : r.getOutputs().getSouth()) {
 			if (lr.getRoom().equals(selectedRoom2)) {
 				return true;
 			}
@@ -186,8 +178,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				temp.add(r);
 			}
 		}
-		if (temp.size() > 0)
+		if (temp.size() > 0) {
+			if (temp.size() > 1) {
+				return selectedRoom;
+			}
 			return temp.get(0);
+		}
 		return null;
 	}
 
@@ -198,9 +194,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		// Dessiner le fond de l'�cran en premier
 		for (Room r : maze.getRooms().values()) {
 			MazeDrawer.drawRoom(r, canvas);
-			if(r.isOccuped()){
-				Bitmap bitmap = Bitmap.createScaledBitmap(bm, bmWidth, bmHeight, false);
-				MazeDrawer.drawCharacter(bitmap,r,canvas);
+			if (r.isOccuped()) {
+				int characterSize = 0;
+				if (r.getHeight()>r.getWidth())
+					characterSize = r.getWidth();
+				else
+					characterSize = r.getHeight();
+				Bitmap bitmap = Bitmap.createScaledBitmap(bm,(int) (characterSize*0.25),
+						(int) (characterSize*0.25), false);
+				MazeDrawer.drawCharacter(bitmap, r, canvas);
 			}
 		}
 

@@ -2,26 +2,21 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.Switch;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
 import fr.upem.android.deadhal.utils.RotateGestureDetector;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.widget.Switch;
 
 @SuppressLint("WrongCall")
 public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
@@ -159,8 +154,12 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 				temp.add(r);
 			}
 		}
-		if (temp.size()>0)
+		if (temp.size()>0){
+			if(temp.size()>1){
+				return selectedRoom;
+			}
 			return temp.get(0);
+		}
 		return null;
 	}
 	@SuppressLint("DrawAllocation")
