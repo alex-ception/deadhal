@@ -28,14 +28,7 @@ public class NewRoomDialogFragment extends DialogFragment
         public void onDialogNegativeClick(NewRoomDialogFragment dialog);
     }
 
-    /**
-     * 
-     */
     private NewRoomDialogListener listener;
-
-    /**
-     * 
-     */
     private EditText roomName;
 
     /**

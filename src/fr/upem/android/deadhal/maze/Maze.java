@@ -16,19 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Maze
 {
-    /**
-     * 
-     */
     private String id;
-
-    /**
-     * 
-     */
     private String name;
-
-    /**
-     * 
-     */
 	private ConcurrentHashMap<String, Room> rooms;
 
 	/**

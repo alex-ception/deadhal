@@ -13,14 +13,7 @@ import android.graphics.Point;
  */
 public class LinkedRoom
 {
-    /**
-     * 
-     */
     private final int direction;
-
-    /**
-     * 
-     */
     private final Room room;
 
     /**

@@ -14,65 +14,17 @@ import fr.upem.android.deadhal.utils.MazeBuilder;
  */
 public class Room
 {
-
-	/**
-     * 
-     */
 	private final String id;
-
-	/**
-     * 
-     */
 	private String name;
-
-	/**
-     * 
-     */
 	private float nameFontSize;
-
-	/**
-     * 
-     */
 	private int x;
-
-	/**
-     * 
-     */
 	private int y;
-
-	/**
-     * 
-     */
 	private int width;
-
-	/**
-     * 
-     */
 	private int height;
-
-	/**
-     * 
-     */
 	private float rotation;
-
-	/**
-     * 
-     */
 	private final Input inputs;
-
-	/**
-     * 
-     */
 	private final Output outputs;
-
-	/**
-     * 
-     */
 	private Interest interest;
-
-	/**
-	 * 
-	 */
 	private boolean occuped;
 
 	/**

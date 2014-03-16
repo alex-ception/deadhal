@@ -30,14 +30,8 @@ public class LoadDialogFragment extends DialogFragment
         public void onDialogNegativeClick(LoadDialogFragment dialog);
     }
 
-    /**
-     * 
-     */
     private String[] files;
 
-    /**
-     * 
-     */
     private LoadDialogListener listener;
 
     /**

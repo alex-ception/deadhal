@@ -24,14 +24,7 @@ import org.w3c.dom.Element;
  */
 public class XMLWriter
 {
-    /**
-     * 
-     */
     private final Maze maze;
-
-    /**
-     * 
-     */
     private final Document document;
 
     /**

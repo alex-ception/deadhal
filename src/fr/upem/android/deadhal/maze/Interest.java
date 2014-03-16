@@ -10,19 +10,8 @@ package fr.upem.android.deadhal.maze;
  */
 public class Interest
 {
-    /**
-     * 
-     */
     private final String id;
-
-    /**
-     * 
-     */
     private final String name;
-
-    /**
-     * 
-     */
     private float fontSize;
 
     /**

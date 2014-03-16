@@ -43,9 +43,6 @@ public class NewIODialogFragment extends DialogFragment
         public void onDialogNegativeClick(NewIODialogFragment dialog);
     }
 
-    /**
-     * 
-     */
     private NewIODialogListener listener;
 
     /**

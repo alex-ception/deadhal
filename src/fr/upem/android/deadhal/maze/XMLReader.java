@@ -27,14 +27,7 @@ import android.graphics.Point;
  */
 public class XMLReader
 {
-    /**
-     * 
-     */
     private final Maze maze;
-
-    /**
-     * 
-     */
     private final Document document;
 
     /**

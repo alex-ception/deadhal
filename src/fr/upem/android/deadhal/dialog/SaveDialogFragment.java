@@ -28,14 +28,7 @@ public class SaveDialogFragment extends DialogFragment
         public void onDialogNegativeClick(SaveDialogFragment dialog);
     }
 
-    /**
-     * 
-     */
     private SaveDialogListener listener;
-
-    /**
-     * 
-     */
     private EditText levelName;
 
     /**
