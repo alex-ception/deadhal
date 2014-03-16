@@ -17,11 +17,35 @@ import fr.upem.android.deadhal.utils.MazeBuilder;
 
 import android.graphics.Point;
 
+/**
+ * Class creating a Maze from its XML representation
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class XMLReader
 {
+    /**
+     * 
+     */
     private final Maze maze;
+
+    /**
+     * 
+     */
     private final Document document;
 
+    /**
+     * Class constructor, directly building the Maze after cleaning it
+     * 
+     * @param maze The maze object to fill
+     * @param xmlString A string representation of the XML maze
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
     public XMLReader(Maze maze, String xmlString) throws ParserConfigurationException, SAXException, IOException
     {
         DocumentBuilderFactory factory  = DocumentBuilderFactory.newInstance();
@@ -33,6 +57,10 @@ public class XMLReader
         this.build();
     }
 
+    /**
+     * Handles the logic behind the Maze construction
+     * It builds the maze from the different XML nodes
+     */
     public void build()
     {
         NodeList rooms = this.document.getElementsByTagName(XMLRW.ID_ROOM);
@@ -45,6 +73,11 @@ public class XMLReader
             this.buildInputsOutputs((Element) rooms.item(i));
     }
 
+    /**
+     * Build a specific room
+     * 
+     * @param room The XML node representing a room
+     */
     public void buildRoom(Element room)
     {
         String id       = room.getAttribute(XMLRW.ATTR_ROOM_ID);
@@ -59,6 +92,11 @@ public class XMLReader
         this.maze.addRoom(roomObject);
     }
 
+    /**
+     * Builds the inputs/outputs of a specific room
+     * 
+     * @param room The XML node representing a room
+     */
     public void buildInputsOutputs(Element room)
     {
         Room roomObject     = this.maze.getRoomById(room.getAttribute(XMLRW.ATTR_ROOM_ID));
@@ -79,6 +117,9 @@ public class XMLReader
         }
     }
 
+    /**
+     * @return The builded maze
+     */
     public Maze getMaze()
     {
         return this.maze;

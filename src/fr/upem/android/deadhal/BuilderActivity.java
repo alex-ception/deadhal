@@ -102,8 +102,6 @@ implements
 
     /**
      * Handles the call of the save dialog
-     * 
-     * @return void
      */
     public void saveAction()
     {
@@ -118,8 +116,6 @@ implements
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to save
-     * 
-     * @return void
      */
     @Override
     public void onDialogPositiveClick(SaveDialogFragment dialog, String levelName)
@@ -156,8 +152,6 @@ implements
      * Shows a Toast saying the level was not saved
      * 
      * @param dialog The dialog fragment created
-     * 
-     * @return void
      */
     @Override
     public void onDialogNegativeClick(SaveDialogFragment dialog)
@@ -170,8 +164,6 @@ implements
 
     /**
      * Handles the call of the load dialog
-     * 
-     * @return void
      */
     public void loadAction()
     {
@@ -186,8 +178,6 @@ implements
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the maze to load
-     * 
-     * @return void
      */
     @Override
     public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName)
@@ -217,8 +207,6 @@ implements
      * Shows a Toast saying the level was not loaded
      * 
      * @param dialog The dialog fragment created
-     * 
-     * @return void
      */
     @Override
     public void onDialogNegativeClick(LoadDialogFragment dialog)
@@ -231,8 +219,6 @@ implements
 
     /**
      * Handles the call of a new room dialog
-     * 
-     * @return void
      */
     public void newRoomAction()
     {
@@ -247,8 +233,6 @@ implements
      * 
      * @param dialog The dialog fragment created
      * @param roomName The name of the room to add
-     * 
-     * @return void
      */
     @Override
     public void onDialogPositiveClick(NewRoomDialogFragment dialog, String roomName)
@@ -279,8 +263,6 @@ implements
      * Shows a Toast saying the room was not added
      * 
      * @param dialog The dialog fragment created
-     * 
-     * @return void
      */
     @Override
     public void onDialogNegativeClick(NewRoomDialogFragment dialog)
@@ -294,8 +276,6 @@ implements
     /**
      * Handles the call of a new IO dialog
      * Aborts and show a Toast if there are not at least two rooms
-     * 
-     * @return void
      */
     public void newIOAction()
     {
@@ -323,8 +303,6 @@ implements
      * @param to The room where the IO ends
      * @param directionTo The position of the IO on the room
      * @param twoWay Defines if the IO a two-way IO
-     * 
-     * @return void
      */
     @Override
     public void onDialogPositiveClick(NewIODialogFragment dialog, Room from, int directionFrom, Room to, int directionTo, boolean twoWay)
@@ -347,8 +325,6 @@ implements
      * Shows a Toast saying the IO was not added
      * 
      * @param dialog The dialog fragment created
-     * 
-     * @return void
      */
     @Override
     public void onDialogNegativeClick(NewIODialogFragment dialog)

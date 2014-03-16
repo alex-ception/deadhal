@@ -2,16 +2,18 @@ package fr.upem.android.deadhal.maze;
 
 import java.util.UUID;
 
-import android.app.Application;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.webkit.WebView.FindListener;
-
-import fr.upem.android.deadhal.R;
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
-public class Room {
+/**
+ * A class representing a room
+ *
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
+public class Room
+{
 
 	/**
      * 
@@ -68,9 +70,20 @@ public class Room {
      */
 	private Interest interest;
 
+	/**
+	 * 
+	 */
 	private boolean occuped;
 
-	public Room(String id, String name) throws RuntimeException {
+	/**
+	 * Class constructor
+	 * 
+	 * @param id The id of the room
+	 * @param name The name of the room
+	 * @throws RuntimeException
+	 */
+	public Room(String id, String name) throws RuntimeException
+	{
 		MazeBuilder.getInstance().referenceRoomName(name);
 
 		this.inputs = new Input();
@@ -81,122 +94,245 @@ public class Room {
 		this.occuped = false;
 	}
 
-	public String getId() {
+	/**
+	 * @return The id of the room
+	 */
+	public String getId()
+	{
 		return this.id;
 	}
 
-	public String getName() {
+    /**
+     * @return The name of the room
+     */
+	public String getName()
+	{
 		return this.name;
 	}
 
-	public int getX() {
+    /**
+     * @return The X position of the room
+     */
+	public int getX()
+	{
 		return this.x;
 	}
 
-	public int getY() {
+    /**
+     * @return The Y position of the room
+     */
+	public int getY()
+	{
 		return this.y;
 	}
 
-	public int getWidth() {
+    /**
+     * @return The width of the room
+     */
+	public int getWidth()
+	{
 		return this.width;
 	}
 
-	public int getHeight() {
+    /**
+     * @return The height of the room
+     */
+	public int getHeight()
+	{
 		return this.height;
 	}
 
-	public float getRotation() {
+    /**
+     * @return The rotation angle of the room in degrees
+     */
+	public float getRotation()
+	{
 		return this.rotation;
 	}
 
-	public Interest getInterest() {
+    /**
+     * @return The interest of the room, if any
+     */
+	public Interest getInterest()
+	{
 		return this.interest;
-
 	}
 
-	public float getNameFontSize() {
+    /**
+     * @return The font size (graphic rendering)
+     */
+	public float getNameFontSize()
+	{
 		return this.nameFontSize;
 	}
 
-	public Room setName(String name) {
+	/**
+	 * Sets the name of the room
+	 * 
+	 * @param name The name of the room
+	 * @return The current Room
+	 */
+	public Room setName(String name)
+	{
 		this.name = name;
 
 		return this;
 	}
 
-	public Room setX(int x) {
+    /**
+     * Sets the X position of the room
+     * 
+     * @param x The X position of the room
+     * @return The current Room
+     */
+	public Room setX(int x)
+	{
 		this.x = x;
 
 		return this;
 	}
 
-	public Room setY(int y) {
+    /**
+     * Sets the Y position of the room
+     * 
+     * @param y The Y position of the room
+     * @return The current Room
+     */
+	public Room setY(int y)
+	{
 		this.y = y;
 
 		return this;
 	}
 
-	public Room setWidth(int width) {
+    /**
+     * Sets the width of the room
+     * 
+     * @param width The width of the room
+     * @return The current Room
+     */
+	public Room setWidth(int width)
+	{
 		this.width = width;
 
 		return this;
 	}
 
-	public Room setHeight(int height) {
+    /**
+     * Sets the height of the room
+     * 
+     * @param height The height of the room
+     * @return The current Room
+     */
+	public Room setHeight(int height)
+	{
 		this.height = height;
 
 		return this;
 	}
 
-	public Room setRotation(float rotation) {
+    /**
+     * Sets the rotation angle of the room
+     * 
+     * @param rotation The rotation angle of the room
+     * @return The current Room
+     */
+	public Room setRotation(float rotation)
+	{
 		this.rotation = rotation;
 
 		return this;
 	}
 
-	public Room setInterest(Interest interest) {
+	/**
+	 * Sets the interest of the room
+	 * 
+	 * @param interest The interest of the room
+	 * @return The current Room
+	 */
+	public Room setInterest(Interest interest)
+	{
 		this.interest = interest;
 
 		return this;
 	}
 
-	public Room setNameFontSize(float nameFontSize) {
+	/**
+	 * Sets the font size (graphic rendering)
+	 * 
+	 * @param nameFontSize The font size
+     * @return The current Room
+	 */
+	public Room setNameFontSize(float nameFontSize)
+	{
 		this.nameFontSize = nameFontSize;
 
 		return this;
 	}
 
-	public Input getInputs() {
+	/**
+	 * @return The inputs of the room
+	 */
+	public Input getInputs()
+	{
 		return this.inputs;
 	}
 
-	public Output getOutputs() {
+	/**
+	 * @return The outputs of the room
+	 */
+	public Output getOutputs()
+	{
 		return this.outputs;
 	}
 
-	public int getXLeft() {
+	/**
+	 * @return The west position of the room
+	 */
+	public int getXLeft()
+	{
 		return getX() - (getHeight() / 2);
 	}
 
-	public int getXRight() {
+	/**
+	 * @return The east position of the room
+	 */
+	public int getXRight()
+	{
 		return getX() + (getHeight() / 2);
 	}
 
-	public int getYTop() {
+    /**
+     * @return The north position of the room
+     */
+	public int getYTop()
+	{
 		return getY() - (getWidth() / 2);
 	}
 
-	public int getYBottom() {
+    /**
+     * @return The south position of the room
+     */
+	public int getYBottom()
+	{
 		return getY() + (getWidth() / 2);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return this.getId().hashCode();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (o instanceof Room) {
 			if (this.getId() == ((Room) o).getId()) {
 				return true;
@@ -205,11 +341,21 @@ public class Room {
 		return false;
 	}
 
-	public boolean isOccuped() {
+	/**
+	 * @return a boolean specifying if the room is occupied
+	 */
+	public boolean isOccuped()
+	{
 		return occuped;
 	}
 
-	public void setOccuped(boolean occuped) {
+	/**
+	 * Sets if the room is occupied or not
+	 * 
+	 * @param occuped A boolean representation
+	 */
+	public void setOccuped(boolean occuped) 
+	{
 		this.occuped = occuped;
 	}
 }

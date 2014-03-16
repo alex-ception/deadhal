@@ -14,11 +14,32 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Class creating a XML representation of the Maze based on its object
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class XMLWriter
 {
+    /**
+     * 
+     */
     private final Maze maze;
+
+    /**
+     * 
+     */
     private final Document document;
 
+    /**
+     * Class constructor, directly building the XML representation
+     * 
+     * @param maze The maze to represent as a XML string
+     * @throws ParserConfigurationException
+     */
     public XMLWriter(Maze maze) throws ParserConfigurationException
     {
         DocumentBuilderFactory factory  = DocumentBuilderFactory.newInstance();
@@ -29,6 +50,10 @@ public class XMLWriter
         this.build();
     }
 
+    /**
+     * Handles the logic behind the XML construction
+     * It builds the maze from the different XML nodes
+     */
     public void build()
     {
         Element root = this.document.createElement(XMLRW.ID_ROOT);
@@ -49,6 +74,12 @@ public class XMLWriter
         this.document.appendChild(root);
     }
 
+    /**
+     * Build a specific room representation
+     * 
+     * @param room The room to represent
+     * @param roomsNode The root node for rooms
+     */
     public void buildRoom(Room room, Element roomsNode)
     {
         Element roomElement = this.document.createElement(XMLRW.ID_ROOM);
@@ -72,6 +103,14 @@ public class XMLWriter
         roomsNode.appendChild(roomElement);
     }
 
+    /**
+     * Builds an Input or Output based on parameters given
+     * 
+     * @param IOType A string saying if it's an Input or an Output
+     * @param direction The cardinal direction of the IO on the room
+     * @param room The linked room to link to
+     * @return An element representing the IO created
+     */
     public Element buildDirectedIO(String IOType, String direction, LinkedRoom room)
     {
         Element directedIOElement = this.document.createElement(IOType);
@@ -82,7 +121,13 @@ public class XMLWriter
 
         return directedIOElement;
     }
-    
+
+    /**
+     * Builds the different inputs
+     * 
+     * @param room The room which the inputs belongs to
+     * @param inputsNode The root node for the inputs
+     */
     public void buildInputs(Room room, Element inputsNode)
     {
         for (LinkedRoom input : room.getInputs().getNorth())
@@ -95,6 +140,12 @@ public class XMLWriter
             inputsNode.appendChild(this.buildDirectedIO(XMLRW.ID_INPUT, Direction.EAST_STR, input));
     }
 
+    /**
+     * Builds the different outputs
+     * 
+     * @param room The room which the outputs belongs to
+     * @param inputsNode The root node for the outputs
+     */
     public void buildOutputs(Room room, Element outputsNode)
     {
         for (LinkedRoom output : room.getOutputs().getNorth())
@@ -107,6 +158,12 @@ public class XMLWriter
             outputsNode.appendChild(this.buildDirectedIO(XMLRW.ID_OUTPUT, Direction.EAST_STR, output));
     }
 
+    /**
+     * Build an interest
+     * 
+     * @param room The room which the interest belongs to
+     * @param roomNode The room node
+     */
     public void buildInterest(Room room, Element roomNode)
     {
         if (room.getInterest() == null)
@@ -118,11 +175,18 @@ public class XMLWriter
         roomNode.appendChild(interestElement);
     }
 
+    /**
+     * @return the file name
+     */
     public String getFileName()
     {
         return this.maze.getId() + ".xml";
     }
 
+    /**
+     * @return A string representation of the XML builded
+     * @throws TransformerException
+     */
     public String getContent() throws TransformerException
     {
         TransformerFactory factory  = TransformerFactory.newInstance();
