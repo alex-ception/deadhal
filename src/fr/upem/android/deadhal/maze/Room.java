@@ -2,8 +2,6 @@ package fr.upem.android.deadhal.maze;
 
 import java.util.UUID;
 
-import android.R.string;
-
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
 /**
