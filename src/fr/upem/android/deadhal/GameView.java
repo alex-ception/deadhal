@@ -2,15 +2,6 @@ package fr.upem.android.deadhal;
 
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-import fr.upem.android.deadhal.maze.LinkedRoom;
-import fr.upem.android.deadhal.maze.Maze;
-import fr.upem.android.deadhal.maze.Room;
-import fr.upem.android.deadhal.utils.MazeDrawer;
-import fr.upem.android.deadhal.utils.Rooms;
-
-=======
->>>>>>> remy
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,16 +12,12 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-<<<<<<< HEAD
-=======
 import android.widget.Toast;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
->>>>>>> remy
-
 /**
  * Controller handling logic for the game view
  * 

@@ -151,30 +151,9 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 		return true;
 	}
 
-<<<<<<< HEAD
     /**
      * {@inheritDoc}
      */
-=======
-	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
-		ArrayList<Room> temp = new ArrayList<Room>();
-		for (Room r : maze.getRooms().values()) {
-			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
-					.getXRight())
-					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
-							.getYBottom())) {
-				temp.add(r);
-			}
-		}
-		if (temp.size()>0){
-			if(temp.size()>1){
-				return selectedRoom;
-			}
-			return temp.get(0);
-		}
-		return null;
-	}
->>>>>>> remy
 	@SuppressLint("DrawAllocation")
 	@Override
 	protected void onDraw(Canvas canvas)
@@ -279,23 +258,24 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
 	 * 
 	 * @return The corresponding Room
 	 */
-    private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc)
-    {
-        ArrayList<Room> temp = new ArrayList<Room>();
-        for (Room r : maze.getRooms().values()) {
-            if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
-                    .getXRight())
-                    && (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
-                            .getYBottom())) {
-                temp.add(r);
-            }
-        }
-        if (temp.size()>0)
-            return temp.get(0);
-
-        return null;
-    }
-
+	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
+		ArrayList<Room> temp = new ArrayList<Room>();
+		for (Room r : maze.getRooms().values()) {
+			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
+					.getXRight())
+					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
+							.getYBottom())) {
+				temp.add(r);
+			}
+		}
+		if (temp.size()>0){
+			if(temp.size()>1){
+				return selectedRoom;
+			}
+			return temp.get(0);
+		}
+		return null;
+	}
     /**
      * Drawing thread
      * 
