@@ -7,28 +7,29 @@ import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
-import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Switch;
-import android.widget.Toast;
 
-@SuppressLint("WrongCall")
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+/**
+ * Controller handling logic for the game view
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
+@SuppressLint({ "WrongCall", "ViewConstructor" })
+public class GameView extends SurfaceView implements SurfaceHolder.Callback
+{
 	private static final int INVALID_POINTER_ID = -1;
 	private Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.yoshi);
 	int bmWidth;
@@ -42,17 +43,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	float endSpan;
 	float endSpanX;
 	float endSpanY;
-
 	Room selectedRoom;
-
 	private float mLastTouchX;
 	private float mLastTouchY;
 	private int mActivePointerId = INVALID_POINTER_ID;
-
 	private ScaleGestureDetector mScaleDetector;
 
+	/**
+	 * Class constructor 
+	 * @param gameActivity The GameActivity instance
+	 */
 	@SuppressLint("NewApi")
-	public GameView(GameActivity gameActivity) {
+	public GameView(GameActivity gameActivity)
+	{
 		super(gameActivity);
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this);
@@ -65,9 +68,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		bmHeight=75;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressLint("NewApi")
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(MotionEvent event)
+	{
 		mScaleDetector.onTouchEvent(event);
 		final int action = event.getAction();
 		switch (action & MotionEvent.ACTION_MASK) {
@@ -135,7 +142,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
-	private void moveTo(Room selectedRoom2) {
+	/**
+	 * Move to a new room
+	 * 
+	 * @param selectedRoom2 The selected room
+	 */
+	private void moveTo(Room selectedRoom2)
+	{
 		for (Room r : maze.getRooms().values()) {
 			if (r.isOccuped()) {
 				if (wayIsGood(r, selectedRoom2)) {
@@ -152,7 +165,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		
 	}
 
-	private boolean wayIsGood(Room r, Room selectedRoom2) {
+	/**
+	 * Defines if you can go to new room
+	 * 
+	 * @param r The current room
+	 * @param selectedRoom2 The room to go to
+	 * @return A boolean representing if you can go or not in the selected room
+	 */
+	private boolean wayIsGood(Room r, Room selectedRoom2)
+	{
 		for (LinkedRoom lr : r.getOutputs().getEast()) {
 			if (lr.getRoom().equals(selectedRoom2)) {
 				return true;
@@ -176,7 +197,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return false;
 	}
 
-	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
+    /**
+     * Return the selected room based on coordinates that have been touched
+     * 
+     * @param mLastTouchXLoc the x position of the tap
+     * @param mLastTouchYLoc the y position of the tap
+     * 
+     * @return The corresponding Room
+     */
+	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc)
+	{
 		ArrayList<Room> temp = new ArrayList<Room>();
 		for (Room r : maze.getRooms().values()) {
 			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
@@ -191,9 +221,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressLint("DrawAllocation")
 	@Override
-	protected void onDraw(Canvas canvas) {
+	protected void onDraw(Canvas canvas)
+	{
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
 		for (Room r : maze.getRooms().values()) {
@@ -233,20 +267,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth,
-			int pHeight) {
-		//
+	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth, int pHeight)
+	{
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public void surfaceCreated(SurfaceHolder pHolder) {
+	public void surfaceCreated(SurfaceHolder pHolder)
+	{
 		mThread.keepDrawing = true;
 		mThread.start();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public void surfaceDestroyed(SurfaceHolder pHolder) {
+	public void surfaceDestroyed(SurfaceHolder pHolder)
+	{
 		mThread.keepDrawing = false;
 		boolean retry = true;
 		while (retry) {
@@ -259,11 +303,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	private class DrawingThread extends Thread {
+    /**
+     * Drawing thread
+     * 
+     * @author Alexandre ANDRE
+     * @author Dylan BANCE
+     * @author Remy BARBOSA
+     * @author Houmam WEHBEH
+     */
+	private class DrawingThread extends Thread
+	{
 		boolean keepDrawing = true;
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public void run() {
+		public void run()
+		{
 			Canvas canvas;
 			while (keepDrawing) {
 				canvas = null;
@@ -287,25 +344,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	private class ScaleListener extends
-			ScaleGestureDetector.SimpleOnScaleGestureListener {
+    /**
+     * Scale listener
+     * 
+     * @author Alexandre ANDRE
+     * @author Dylan BANCE
+     * @author Remy BARBOSA
+     * @author Houmam WEHBEH
+     */
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+	{
+	    /**
+	     * {@inheritDoc}
+	     */
 		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
+		public boolean onScaleBegin(ScaleGestureDetector detector)
+		{
 			beginSpan = (int) detector.getCurrentSpan();
 			beginSpanX = (int) detector.getCurrentSpanX();
 			beginSpanY = (int) detector.getCurrentSpanY();
 			return true;
 		}
 
+        /**
+         * {@inheritDoc}
+         */
 		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
+		public boolean onScale(ScaleGestureDetector detector)
+		{
 			return true;
 		}
 
+        /**
+         * {@inheritDoc}
+         */
 		@SuppressLint("NewApi")
 		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-
+		public void onScaleEnd(ScaleGestureDetector detector)
+		{
 			endSpan = detector.getCurrentSpan();
 			for (Room r : maze.getRooms().values()) {
 				float percentScale = ((endSpan * 100) / beginSpan) / 100;
@@ -320,8 +396,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				r.setX((int) (r.getX() * percentScale));
 				r.setY((int) (r.getY() * percentScale));
 			}
-
 		}
 	}
-
 }

@@ -1,26 +1,33 @@
 package fr.upem.android.deadhal.utils;
 
 import fr.upem.android.deadhal.maze.LinkedRoom;
-import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
-import android.app.Application;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
-import android.widget.Toast;
 
-import fr.upem.android.deadhal.R;
-
-public class MazeDrawer {
-
-	public static void drawRoom(Room r, Canvas canvas) {
-
+/**
+ * A class helper to render a maze
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
+public class MazeDrawer
+{
+    /**
+     * Draw a room
+     * 
+     * @param r The room to draw
+     * @param canvas The canvas to render on
+     */
+	public static void drawRoom(Room r, Canvas canvas)
+	{
 		Paint paintRoom = new Paint();
 		paintRoom.setStyle(Paint.Style.FILL);
 		paintRoom.setColor(Color.rgb(145, 190, 242));
@@ -54,11 +61,18 @@ public class MazeDrawer {
 		}
 
 		canvas.restore();
-
 	}
 
-	public static void drawInputs(Room r, Canvas canvas, LinkedRoom input,
-			Point rotatedPointRoom) {
+	/**
+	 * Draw inputs
+	 * 
+	 * @param r The room to build inputs
+	 * @param canvas The canvas to render on
+	 * @param input The linkedRoom
+	 * @param rotatedPointRoom The rotatedPointRoom
+	 */
+	public static void drawInputs(Room r, Canvas canvas, LinkedRoom input, Point rotatedPointRoom)
+	{
 		Paint paintInputs = new Paint();
 		paintInputs.setStyle(Paint.Style.FILL);
 		paintInputs.setColor(Color.DKGRAY);
@@ -89,7 +103,15 @@ public class MazeDrawer {
 		canvas.restore();
 	}
 
-	public static void drawCharacter(Bitmap bm, Room r, Canvas canvas) {
+	/**
+	 * Draw a character
+	 * 
+	 * @param bm The bitmap to draw
+	 * @param r The room to draw on
+	 * @param canvas The canvas to render on
+	 */
+	public static void drawCharacter(Bitmap bm, Room r, Canvas canvas)
+	{
 		Paint paintRoom = new Paint();
 		paintRoom.setStyle(Paint.Style.FILL);
 		paintRoom.setColor(Color.rgb(145, 190, 242));

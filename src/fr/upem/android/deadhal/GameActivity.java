@@ -8,7 +8,6 @@ import fr.upem.android.deadhal.dialog.LoadDialogFragment;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.XMLReader;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -17,13 +16,16 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class GameActivity extends FragmentActivity
-implements
-    LoadDialogFragment.LoadDialogListener
+/**
+ * Controller handling logic for the game
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
+public class GameActivity extends FragmentActivity implements LoadDialogFragment.LoadDialogListener
 {
-    /**
-     * The object representing the maze
-     */
     private Maze maze;
 
     /**
@@ -37,7 +39,7 @@ implements
 
         this.maze                   = new Maze();
         LinearLayout linearLayout   = (LinearLayout)findViewById(R.id.linearLayoutGame);
-        GameView mView           = new GameView(this);
+        GameView mView              = new GameView(this);
         linearLayout.addView(mView);
     }
 
@@ -66,7 +68,7 @@ implements
         }
     }
 
-        /**
+    /**
      * Handles the call of the load dialog
      * 
      * @return void

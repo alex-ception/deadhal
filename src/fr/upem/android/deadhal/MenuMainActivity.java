@@ -6,8 +6,19 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 
+/**
+ * Controller handling logic for the main menu
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class MenuMainActivity extends Activity
 {
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -15,6 +26,9 @@ public class MenuMainActivity extends Activity
 		setContentView(R.layout.activity_menu_main);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -23,6 +37,11 @@ public class MenuMainActivity extends Activity
 		return true;
 	}
 
+	/**
+	 * Handle a click on a button
+	 * 
+	 * @param view The button clicked
+	 */
 	public void buttonsOnClick(View view)
 	{
 	    switch (view.getId()) {

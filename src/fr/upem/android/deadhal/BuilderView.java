@@ -10,21 +10,26 @@ import fr.upem.android.deadhal.utils.Rooms;
 import fr.upem.android.deadhal.utils.RotateGestureDetector;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Switch;
 
-@SuppressLint("WrongCall")
-public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
+/**
+ * Controller handling logic for the level builder view
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
+@SuppressLint({ "WrongCall", "ViewConstructor" })
+public class BuilderView extends SurfaceView implements SurfaceHolder.Callback
+{
 	private static final int INVALID_POINTER_ID = -1;
 	SurfaceHolder mSurfaceHolder;
 	DrawingThread mThread;
@@ -50,34 +55,32 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 	private ScaleGestureDetector mScaleDetector;
 	private RotateGestureDetector mRotateDetector;
 
-	public BuilderView(BuilderActivity context) {
+	/**
+	 * Class constructor
+	 * @param context The BuilderActivity instance
+	 */
+	public BuilderView(BuilderActivity context)
+	{
 		super(context);
-		mSurfaceHolder = getHolder();
-		mSurfaceHolder.addCallback(this);
-		mThread = new DrawingThread();
-		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-		mRotateDetector = new RotateGestureDetector(context,
-				new RotateListener());
 
-		/*
-		 * Room r1 = new Room("room 1 ", "room 1 "); Room r2 = new
-		 * Room("salle de réception", "salle de réception");
-		 * r1.setX(50).setY(50).setWidth(200).setHeight(500).setRotation(10);
-		 * r2.setX(200).setY(200).setWidth(500).setHeight(200).setRotation(45);
-		 * LinkedRoom lr1 = new
-		 * LinkedRoom(fr.upem.android.deadhal.maze.Direction.WEST, r2);
-		 * r1.getInputs().addSouth(lr1); r1.getInputs().addNorth(lr1);
-		 * r1.getInputs().addEast(lr1); r1.getInputs().addWest(lr1);
-		 * rooms.add(r1); rooms.add(r2);
-		 */
-		selectedRoom = null;
-		RotateSwitch = (Switch) context.findViewById(R.id.RotateSwitch);
-		this.maze = context.getMaze();
+		mSurfaceHolder    = getHolder();
+		mThread           = new DrawingThread();
+		mScaleDetector    = new ScaleGestureDetector(context, new ScaleListener());
+		mRotateDetector   = new RotateGestureDetector(context, new RotateListener());
+		selectedRoom      = null;
+		RotateSwitch      = (Switch) context.findViewById(R.id.RotateSwitch);
+		this.maze         = context.getMaze();
+
+		mSurfaceHolder.addCallback(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressLint("NewApi")
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(MotionEvent event)
+	{
 		mScaleDetector.onTouchEvent(event);
 		mRotateDetector.onTouchEvent(event);
 		final int action = event.getAction();
@@ -149,23 +152,13 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
-	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
-		ArrayList<Room> temp = new ArrayList<Room>();
-		for (Room r : maze.getRooms().values()) {
-			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
-					.getXRight())
-					&& (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
-							.getYBottom())) {
-				temp.add(r);
-			}
-		}
-		if (temp.size()>0)
-			return temp.get(0);
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
 	@SuppressLint("DrawAllocation")
 	@Override
-	protected void onDraw(Canvas canvas) {
+	protected void onDraw(Canvas canvas)
+	{
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
 
@@ -222,20 +215,30 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth,
-			int pHeight) {
-		//
+	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth, int pHeight)
+	{
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public void surfaceCreated(SurfaceHolder pHolder) {
+	public void surfaceCreated(SurfaceHolder pHolder)
+	{
 		mThread.keepDrawing = true;
 		mThread.start();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
-	public void surfaceDestroyed(SurfaceHolder pHolder) {
+	public void surfaceDestroyed(SurfaceHolder pHolder)
+	{
 		mThread.keepDrawing = false;
 		boolean retry = true;
 		while (retry) {
@@ -248,11 +251,49 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	private class DrawingThread extends Thread {
+	/**
+	 * Return the selected room based on coordinates that have been touched
+	 * 
+	 * @param mLastTouchXLoc the x position of the tap
+	 * @param mLastTouchYLoc the y position of the tap
+	 * 
+	 * @return The corresponding Room
+	 */
+    private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc)
+    {
+        ArrayList<Room> temp = new ArrayList<Room>();
+        for (Room r : maze.getRooms().values()) {
+            if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
+                    .getXRight())
+                    && (r.getYTop() <= mLastTouchYLoc && mLastTouchYLoc <= r
+                            .getYBottom())) {
+                temp.add(r);
+            }
+        }
+        if (temp.size()>0)
+            return temp.get(0);
+
+        return null;
+    }
+
+    /**
+     * Drawing thread
+     * 
+     * @author Alexandre ANDRE
+     * @author Dylan BANCE
+     * @author Remy BARBOSA
+     * @author Houmam WEHBEH
+     */
+	private class DrawingThread extends Thread
+	{
 		boolean keepDrawing = true;
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public void run() {
+		public void run()
+		{
 			Canvas canvas;
 			while (keepDrawing) {
 				canvas = null;
@@ -276,10 +317,22 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	private class RotateListener extends
-			RotateGestureDetector.SimpleOnRotateGestureListener {
+	/**
+	 * Rotation listener
+	 * 
+	 * @author Alexandre ANDRE
+	 * @author Dylan BANCE
+	 * @author Remy BARBOSA
+	 * @author Houmam WEHBEH
+	 */
+	private class RotateListener extends RotateGestureDetector.SimpleOnRotateGestureListener
+	{
+	    /**
+	     * {@inheritDoc}
+	     */
 		@Override
-		public boolean onRotate(RotateGestureDetector detector) {
+		public boolean onRotate(RotateGestureDetector detector)
+		{
 			if (RotateSwitch.isChecked()) {
 				endRotate = detector.getRotationDegreesDelta();
 				if (selectedRoom != null) {
@@ -287,44 +340,74 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 							.getRotation() + (beginRotate - endRotate)));
 				}
 			}
+
 			return true;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public boolean onRotateBegin(RotateGestureDetector detector) {
+		public boolean onRotateBegin(RotateGestureDetector detector)
+		{
 			beginRotate = detector.getRotationDegreesDelta();
+
 			return true;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public void onRotateEnd(RotateGestureDetector detector) {
-
+		public void onRotateEnd(RotateGestureDetector detector)
+		{
 		}
 	}
 
-	private class ScaleListener extends
-			ScaleGestureDetector.SimpleOnScaleGestureListener {
+    /**
+     * Scale listener
+     * 
+     * @author Alexandre ANDRE
+     * @author Dylan BANCE
+     * @author Remy BARBOSA
+     * @author Houmam WEHBEH
+     */
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+	{
+	    /**
+	     * {@inheritDoc}
+	     */
 		@SuppressLint("NewApi")
 		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			beginSpan = (int) detector.getCurrentSpan();
-			beginSpanX = (int) detector.getCurrentSpanX();
-			beginSpanY = (int) detector.getCurrentSpanY();
+		public boolean onScaleBegin(ScaleGestureDetector detector)
+		{
+			beginSpan    = (int) detector.getCurrentSpan();
+			beginSpanX   = (int) detector.getCurrentSpanX();
+			beginSpanY   = (int) detector.getCurrentSpanY();
+
 			return true;
 		}
 
+        /**
+         * {@inheritDoc}
+         */
 		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
+		public boolean onScale(ScaleGestureDetector detector)
+		{
 			return true;
 		}
 
+        /**
+         * {@inheritDoc}
+         */
 		@SuppressLint("NewApi")
 		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-
-			endSpan = detector.getCurrentSpan();
+		public void onScaleEnd(ScaleGestureDetector detector)
+		{
+			endSpan  = detector.getCurrentSpan();
 			endSpanX = detector.getCurrentSpanX();
 			endSpanY = detector.getCurrentSpanY();
+
 			if (selectedRoom != null) {
 				if (!RotateSwitch.isChecked()) {
 					float XPercent = ((endSpanX * 100) / beginSpanX) / 100;
@@ -357,11 +440,8 @@ public class BuilderView extends SurfaceView implements SurfaceHolder.Callback {
 						r.setX((int) (r.getX() * percentScale));
 						r.setY((int) (r.getY() * percentScale));
 					}
-
 				}
 			}
-
 		}
 	}
-
 }
