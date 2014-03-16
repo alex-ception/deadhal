@@ -1,5 +1,6 @@
 package fr.upem.android.deadhal.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
@@ -7,53 +8,58 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 /**
- * @author Almer Thie (code.almeros.com)
- * Copyright (c) 2013, Almer Thie (code.almeros.com)
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- *
- *  Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- *  Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer 
- *  in the documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
- * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, 
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
- * OF SUCH DAMAGE.
+ * A class handling rotating gesture
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
  */
-public abstract class TwoFingerGestureDetector extends BaseGestureDetector {
+public abstract class TwoFingerGestureDetector extends BaseGestureDetector
+{
 
     private final float mEdgeSlop;
     private float mRightSlopEdge;
     private float mBottomSlopEdge;
+    private float mCurrLen;
+    private float mPrevLen;
     
 	protected float mPrevFingerDiffX;
 	protected float mPrevFingerDiffY;
 	protected float mCurrFingerDiffX;
 	protected float mCurrFingerDiffY;
-    
-    private float mCurrLen;
-    private float mPrevLen;
 
-    public TwoFingerGestureDetector(Context context) {
+	/**
+	 * Class constructor
+	 * 
+	 * @param context The application context
+	 */
+    public TwoFingerGestureDetector(Context context)
+    {
     	super(context);
     	
-        ViewConfiguration config = ViewConfiguration.get(context);
-        mEdgeSlop = config.getScaledEdgeSlop();       	
+        ViewConfiguration config    = ViewConfiguration.get(context);
+        mEdgeSlop                   = config.getScaledEdgeSlop();       	
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	protected abstract void handleStartProgressEvent(int actionCode, MotionEvent event);
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	protected abstract void handleInProgressEvent(int actionCode, MotionEvent event);
 
-	protected void updateStateByEvent(MotionEvent curr){
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void updateStateByEvent(MotionEvent curr)
+	{
 		super.updateStateByEvent(curr);
 
 		final MotionEvent prev = mPrevEvent;
@@ -83,79 +89,89 @@ public abstract class TwoFingerGestureDetector extends BaseGestureDetector {
 	}
 
     /**
-     * Return the current distance between the two pointers forming the
-     * gesture in progress.
+     * Return the current distance between the two pointers forming the gesture in progress
      * 
      * @return Distance between pointers in pixels.
      */
-    public float getCurrentSpan() {
+    @SuppressLint("FloatMath")
+    public float getCurrentSpan()
+    {
         if (mCurrLen == -1) {
             final float cvx = mCurrFingerDiffX;
             final float cvy = mCurrFingerDiffY;
             mCurrLen = FloatMath.sqrt(cvx*cvx + cvy*cvy);
         }
+
         return mCurrLen;
     }
 
     /**
-     * Return the previous distance between the two pointers forming the
-     * gesture in progress.
+     * Return the previous distance between the two pointers forming the gesture in progress
      * 
      * @return Previous distance between pointers in pixels.
      */
-    public float getPreviousSpan() {
+    @SuppressLint("FloatMath")
+    public float getPreviousSpan()
+    {
         if (mPrevLen == -1) {
             final float pvx = mPrevFingerDiffX;
             final float pvy = mPrevFingerDiffY;
             mPrevLen = FloatMath.sqrt(pvx*pvx + pvy*pvy);
         }
+
         return mPrevLen;
     }
     
     /**
-     * MotionEvent has no getRawX(int) method; simulate it pending future API approval. 
+     * MotionEvent has no getRawX(int) method
+     * 
      * @param event
      * @param pointerIndex
      * @return
      */
-    protected static float getRawX(MotionEvent event, int pointerIndex) {
+    protected static float getRawX(MotionEvent event, int pointerIndex)
+    {
         float offset = event.getX() - event.getRawX();
-        if(pointerIndex < event.getPointerCount()){
+
+        if(pointerIndex < event.getPointerCount())
         	return event.getX(pointerIndex) + offset;
-        } 
+
         return 0f;
     }
 
     /**
-     * MotionEvent has no getRawY(int) method; simulate it pending future API approval. 
+     * MotionEvent has no getRawY(int) method
+     * 
      * @param event
      * @param pointerIndex
      * @return
      */
-    protected static float getRawY(MotionEvent event, int pointerIndex) {
+    protected static float getRawY(MotionEvent event, int pointerIndex)
+    {
         float offset = event.getY() - event.getRawY();
-        if(pointerIndex < event.getPointerCount()){
+
+        if(pointerIndex < event.getPointerCount())
         	return event.getY(pointerIndex) + offset;
-        } 
+
         return 0f;
     }
 
 	/**
-	 * Check if we have a sloppy gesture. Sloppy gestures can happen if the edge
-	 * of the user's hand is touching the screen, for example.
+	 * Check if we have a sloppy gesture
+     * can happen if the edge of the user hand is touching the screen
 	 * 
-	 * @param event
-	 * @return
+	 * @param event The motion event
+	 * @return If the gesture is sloppy or not
 	 */
-    protected boolean isSloppyGesture(MotionEvent event){
-        // As orientation can change, query the metrics in touch down
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        mRightSlopEdge = metrics.widthPixels - mEdgeSlop;
-        mBottomSlopEdge = metrics.heightPixels - mEdgeSlop;
+    protected boolean isSloppyGesture(MotionEvent event)
+    {
+        DisplayMetrics metrics  = mContext.getResources().getDisplayMetrics();
+        mRightSlopEdge          = metrics.widthPixels - mEdgeSlop;
+        mBottomSlopEdge         = metrics.heightPixels - mEdgeSlop;
         
-        final float edgeSlop = mEdgeSlop;
-        final float rightSlop = mRightSlopEdge;
-        final float bottomSlop = mBottomSlopEdge;
+        final float edgeSlop    = mEdgeSlop;
+        final float rightSlop   = mRightSlopEdge;
+        final float bottomSlop  = mBottomSlopEdge;
         
         final float x0 = event.getRawX();
         final float y0 = event.getRawY();
@@ -167,14 +183,13 @@ public abstract class TwoFingerGestureDetector extends BaseGestureDetector {
         boolean p1sloppy = x1 < edgeSlop || y1 < edgeSlop
                 || x1 > rightSlop || y1 > bottomSlop;
 
-        if (p0sloppy && p1sloppy) {
+        if (p0sloppy && p1sloppy)
             return true;
-        } else if (p0sloppy) {
+        else if (p0sloppy)
         	 return true;
-        } else if (p1sloppy) {
+        else if (p1sloppy)
         	 return true;
-        } 
+
         return false;
     }    
-
 }
