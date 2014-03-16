@@ -2,6 +2,8 @@ package fr.upem.android.deadhal.maze;
 
 import java.util.UUID;
 
+import android.R.string;
+
 import fr.upem.android.deadhal.utils.MazeBuilder;
 
 /**
@@ -286,5 +288,20 @@ public class Room
 	public void setOccuped(boolean occuped) 
 	{
 		this.occuped = occuped;
+	}
+	
+	/**
+     * {@inheritDoc}
+     */
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("[ROOM] ==> ");
+		s.append("[");
+		s.append(getId());
+		s.append(",");
+		s.append(getName());
+		s.append("]");
+		return s.toString();
 	}
 }
