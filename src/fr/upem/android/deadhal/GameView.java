@@ -18,6 +18,7 @@ import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.utils.MazeDrawer;
 import fr.upem.android.deadhal.utils.Rooms;
+
 /**
  * Controller handling logic for the game view
  * 
@@ -27,8 +28,7 @@ import fr.upem.android.deadhal.utils.Rooms;
  * @author Houmam WEHBEH
  */
 @SuppressLint({ "WrongCall", "ViewConstructor" })
-public class GameView extends SurfaceView implements SurfaceHolder.Callback
-{
+public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private static final int INVALID_POINTER_ID = -1;
 	private Bitmap bm = BitmapFactory.decodeResource(getResources(),
 			R.drawable.yoshi);
@@ -48,12 +48,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 	private ScaleGestureDetector mScaleDetector;
 
 	/**
-	 * Class constructor 
-	 * @param gameActivity The GameActivity instance
+	 * Class constructor
+	 * 
+	 * @param gameActivity
+	 *            The GameActivity instance
 	 */
 	@SuppressLint("NewApi")
-	public GameView(GameActivity gameActivity)
-	{
+	public GameView(GameActivity gameActivity) {
 		super(gameActivity);
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this);
@@ -69,8 +70,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	@SuppressLint("NewApi")
 	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
+	public boolean onTouchEvent(MotionEvent event) {
 		mScaleDetector.onTouchEvent(event);
 		final int action = event.getAction();
 		switch (action & MotionEvent.ACTION_MASK) {
@@ -141,38 +141,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 	/**
 	 * Move to a new room
 	 * 
-	 * @param selectedRoom2 The selected room
+	 * @param selectedRoom2
+	 *            The selected room
 	 */
-	private void moveTo(Room selectedRoom2)
-	{
-		for (Room r : maze.getRooms().values()) {
-			if (r.isOccuped()) {
-				if (wayIsGood(r, selectedRoom2)) {
-					r.setOccuped(false);
-					selectedRoom.setOccuped(true);
-					return;
-				} else {
-					CharSequence text = "You can't go in this room";
-					int duration = Toast.LENGTH_SHORT;
-					Toast toast = Toast.makeText(getContext(), text, duration);
-					toast.show();
-					return;
+	private void moveTo(Room selectedRoom2) {
+		if (selectedRoom != null) {
+			for (Room r : maze.getRooms().values()) {
+				if (r.isOccuped()) {
+					if (wayIsGood(r, selectedRoom2)) {
+						r.setOccuped(false);
+						selectedRoom.setOccuped(true);
+						return;
+					} else {
+						if (!r.equals(selectedRoom)) {
+							CharSequence text = "You can't go in this room";
+							int duration = Toast.LENGTH_SHORT;
+							Toast toast = Toast.makeText(getContext(), text,
+									duration);
+							toast.show();
+						}
+						return;
+					}
 				}
 			}
+			selectedRoom.setOccuped(true);
 		}
-		selectedRoom.setOccuped(true);
 
 	}
 
 	/**
 	 * Defines if you can go to new room
 	 * 
-	 * @param r The current room
-	 * @param selectedRoom2 The room to go to
+	 * @param r
+	 *            The current room
+	 * @param selectedRoom2
+	 *            The room to go to
 	 * @return A boolean representing if you can go or not in the selected room
 	 */
-	private boolean wayIsGood(Room r, Room selectedRoom2)
-	{
+	private boolean wayIsGood(Room r, Room selectedRoom2) {
 		for (LinkedRoom lr : r.getOutputs().getEast()) {
 			if (lr.getRoom().equals(selectedRoom2)) {
 				return true;
@@ -196,16 +202,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 		return false;
 	}
 
-    /**
-     * Return the selected room based on coordinates that have been touched
-     * 
-     * @param mLastTouchXLoc the x position of the tap
-     * @param mLastTouchYLoc the y position of the tap
-     * 
-     * @return The corresponding Room
-     */
-	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc)
-	{
+	/**
+	 * Return the selected room based on coordinates that have been touched
+	 * 
+	 * @param mLastTouchXLoc
+	 *            the x position of the tap
+	 * @param mLastTouchYLoc
+	 *            the y position of the tap
+	 * 
+	 * @return The corresponding Room
+	 */
+	private Room getSelectedRoom(float mLastTouchXLoc, float mLastTouchYLoc) {
 		ArrayList<Room> temp = new ArrayList<Room>();
 		for (Room r : maze.getRooms().values()) {
 			if ((r.getXLeft() <= mLastTouchXLoc && mLastTouchXLoc <= r
@@ -229,20 +236,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	@SuppressLint("DrawAllocation")
 	@Override
-	protected void onDraw(Canvas canvas)
-	{
+	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 		// Dessiner le fond de l'�cran en premier
 		for (Room r : maze.getRooms().values()) {
 			MazeDrawer.drawRoom(r, canvas);
 			if (r.isOccuped()) {
 				int characterSize = 0;
-				if (r.getHeight()>r.getWidth())
+				if (r.getHeight() > r.getWidth())
 					characterSize = r.getWidth();
 				else
 					characterSize = r.getHeight();
-				Bitmap bitmap = Bitmap.createScaledBitmap(bm,(int) (characterSize*0.25),
-						(int) (characterSize*0.25), false);
+				Bitmap bitmap = Bitmap.createScaledBitmap(bm,
+						(int) (characterSize * 0.25),
+						(int) (characterSize * 0.25), false);
 				MazeDrawer.drawCharacter(bitmap, r, canvas);
 			}
 		}
@@ -280,26 +287,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth, int pHeight)
-	{
+	public void surfaceChanged(SurfaceHolder pHolder, int pFormat, int pWidth,
+			int pHeight) {
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void surfaceCreated(SurfaceHolder pHolder)
-	{
+	public void surfaceCreated(SurfaceHolder pHolder) {
 		mThread.keepDrawing = true;
 		mThread.start();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void surfaceDestroyed(SurfaceHolder pHolder)
-	{
+	public void surfaceDestroyed(SurfaceHolder pHolder) {
 		mThread.keepDrawing = false;
 		boolean retry = true;
 		while (retry) {
@@ -312,24 +317,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
 	}
 
-    /**
-     * Drawing thread
-     * 
-     * @author Alexandre ANDRE
-     * @author Dylan BANCE
-     * @author Remy BARBOSA
-     * @author Houmam WEHBEH
-     */
-	private class DrawingThread extends Thread
-	{
+	/**
+	 * Drawing thread
+	 * 
+	 * @author Alexandre ANDRE
+	 * @author Dylan BANCE
+	 * @author Remy BARBOSA
+	 * @author Houmam WEHBEH
+	 */
+	private class DrawingThread extends Thread {
 		boolean keepDrawing = true;
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void run()
-		{
+		public void run() {
 			Canvas canvas;
 			while (keepDrawing) {
 				canvas = null;
@@ -353,58 +356,52 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-    /**
-     * Scale listener
-     * 
-     * @author Alexandre ANDRE
-     * @author Dylan BANCE
-     * @author Remy BARBOSA
-     * @author Houmam WEHBEH
-     */
-	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
-	{
-	    /**
-	     * {@inheritDoc}
-	     */
+	/**
+	 * Scale listener
+	 * 
+	 * @author Alexandre ANDRE
+	 * @author Dylan BANCE
+	 * @author Remy BARBOSA
+	 * @author Houmam WEHBEH
+	 */
+	private class ScaleListener extends
+			ScaleGestureDetector.SimpleOnScaleGestureListener {
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector)
-		{
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
 			beginSpan = (int) detector.getCurrentSpan();
 			beginSpanX = (int) detector.getCurrentSpanX();
 			beginSpanY = (int) detector.getCurrentSpanY();
 			return true;
 		}
 
-        /**
-         * {@inheritDoc}
-         */
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
-		public boolean onScale(ScaleGestureDetector detector)
-		{
+		public boolean onScale(ScaleGestureDetector detector) {
+
 			return true;
 		}
 
-        /**
-         * {@inheritDoc}
-         */
+		/**
+		 * {@inheritDoc}
+		 */
 		@SuppressLint("NewApi")
 		@Override
-		public void onScaleEnd(ScaleGestureDetector detector)
-		{
+		public void onScaleEnd(ScaleGestureDetector detector) {
 			endSpan = detector.getCurrentSpan();
 			for (Room r : maze.getRooms().values()) {
 				float percentScale = ((endSpan * 100) / beginSpan) / 100;
 
 				r.setHeight((int) (r.getHeight() * percentScale));
 				r.setWidth((int) (r.getWidth() * percentScale));
-				r.setNameFontSize(r.getNameFontSize() * (percentScale));
-				if (r.getInterest() != null) {
-					r.getInterest().setFontSize(
-							r.getInterest().getFontSize() * (percentScale));
-				}
 				r.setX((int) (r.getX() * percentScale));
 				r.setY((int) (r.getY() * percentScale));
 			}
+			beginSpan = endSpan;
 		}
 	}
 }
