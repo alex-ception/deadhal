@@ -14,8 +14,24 @@ import android.util.Log;
 
 import fr.upem.android.deadhal.maze.XMLWriter;
 
+/**
+ * Helper file to save/load on external storage
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class ExternalStorageIO
 {
+    /**
+     * Save a file to external storage
+     * 
+     * @param writer The XML Writer
+     * @throws TransformerException
+     * @throws IOException
+     * @throws RuntimeException
+     */
     public static void save(XMLWriter writer) throws TransformerException, IOException, RuntimeException
     {
         String state            = Environment.getExternalStorageState();
@@ -30,6 +46,14 @@ public class ExternalStorageIO
         fp.close();
     }
 
+    /**
+     * Load a XML file
+     * @param levelName The file name
+     * @return The xml content as a string
+     * 
+     * @throws IOException
+     * @throws RuntimeException
+     */
     public static String load(String levelName) throws IOException, RuntimeException
     {
         String temp;

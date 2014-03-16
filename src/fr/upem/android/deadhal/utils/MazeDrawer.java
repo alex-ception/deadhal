@@ -57,7 +57,7 @@ public class MazeDrawer
 			int interestFontSize= (int)(r.getWidth()*0.08);
 			paintRoomInterest.setTextSize(interestFontSize);
 			paintRoomName.setTextAlign(Align.LEFT);
-			canvas.drawText(r.getName(), xleft, ytop
+			canvas.drawText(r.getInterest().getName(), xleft, ytop
 					+ interestFontSize, paintRoomInterest);
 		}
 

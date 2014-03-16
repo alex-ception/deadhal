@@ -6,6 +6,7 @@
     <string name="menu_main_title">Deadhal</string>
     <string name="menu_main_button_builder">Builder</string>
     <string name="menu_main_button_game">Game</string>
+    <string name="menu_main_button_share">Share</string>
     <string name="menu_main_button_quit">Quit</string>
     <string name="builder_title">Builder</string>
     <string name="builder_menu_room">Room</string>
@@ -35,7 +36,12 @@
     <string name="builder_io_same_room">Cannot create IO on the same room</string>
     <string name="builder_io_error">The IO was not added</string>
     <string name="builder_switch_rotation">Rotation :</string>
-
+    <string name="builder_interest_label_name">Interest :</string>
+    <string name="builder_interest_label_room">Room :</string>
+    <string name="builder_interest_error">The interest was not added</string>
+    <string name="menu_main_share">Share</string>
+    <string name="menu_main_share_error">The maze wont be shared</string>
+    
     <string-array name="directions_values">
         <item>North</item>
         <item>South</item>

@@ -11,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import fr.upem.android.deadhal.dialog.LoadDialogFragment;
 import fr.upem.android.deadhal.dialog.NewIODialogFragment;
+import fr.upem.android.deadhal.dialog.NewInterestDialogFragment;
 import fr.upem.android.deadhal.dialog.NewRoomDialogFragment;
 import fr.upem.android.deadhal.dialog.SaveDialogFragment;
+import fr.upem.android.deadhal.maze.Interest;
 import fr.upem.android.deadhal.maze.Maze;
 import fr.upem.android.deadhal.maze.Room;
 import fr.upem.android.deadhal.maze.XMLReader;
@@ -33,7 +35,8 @@ implements
     SaveDialogFragment.SaveDialogListener,
     LoadDialogFragment.LoadDialogListener,
     NewRoomDialogFragment.NewRoomDialogListener,
-    NewIODialogFragment.NewIODialogListener
+    NewIODialogFragment.NewIODialogListener,
+    NewInterestDialogFragment.NewInterestDialogListener
 {
     /**
      * The object representing the maze
@@ -76,6 +79,7 @@ implements
                 this.newRoomAction();
                 return true;
             case R.id.action_interest:
+                this.newInterestAction();
                 return true;
             case R.id.action_io:
                 this.newIOAction();
@@ -312,6 +316,44 @@ implements
     {
         Toast
             .makeText(this.getApplicationContext(), R.string.builder_io_error, Toast.LENGTH_LONG)
+            .show()
+        ;
+    }
+
+    /**
+     * Handles the call of a new room dialog
+     */
+    public void newInterestAction()
+    {
+        DialogFragment interestDialog = new NewInterestDialogFragment();
+        interestDialog.show(this.getFragmentManager(), "NewInterestDialogFragment");
+    }
+
+    /**
+     * Handles the OK button when trying to add a new interest through dialog
+     * Adds the interest to the maze if everything is OK
+     * 
+     * @param dialog The dialog fragment created
+     * @param from The room where the interest belongs
+     * @param interest The interest to add
+     */
+    @Override
+    public void onDialogPositiveClick(NewInterestDialogFragment dialog, Room room, Interest interest)
+    {
+        MazeBuilder.newInterest(room, interest);
+    }
+
+    /**
+     * Handles the cancel button when trying to add a interest through dialog
+     * Shows a Toast saying the interest was not added
+     * 
+     * @param dialog The dialog fragment created
+     */
+    @Override
+    public void onDialogNegativeClick(NewInterestDialogFragment dialog)
+    {
+        Toast
+            .makeText(this.getApplicationContext(), R.string.builder_interest_error, Toast.LENGTH_LONG)
             .show()
         ;
     }

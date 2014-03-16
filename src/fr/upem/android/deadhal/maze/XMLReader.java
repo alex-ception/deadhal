@@ -83,6 +83,12 @@ public class XMLReader
         float rotation  = Float.parseFloat(room.getAttribute(XMLRW.ATTR_ROOM_ROTATION));
         Room roomObject = MazeBuilder.newRoom(id, name, new Point(x, y), new Point(width, height), rotation);
 
+        NodeList interests  = room.getElementsByTagName(XMLRW.ID_INTEREST);
+        for (int i = 0 ; i < interests.getLength() ; i++) {
+            Interest interest = new Interest(((Element) interests.item(i)).getAttribute(XMLRW.ATTR_INTEREST_NAME));
+            MazeBuilder.newInterest(roomObject, interest);
+        }
+
         this.maze.addRoom(roomObject);
     }
 

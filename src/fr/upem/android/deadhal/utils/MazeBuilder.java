@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Point;
 import android.util.Log;
+import fr.upem.android.deadhal.maze.Interest;
 import fr.upem.android.deadhal.maze.LinkedRoom;
 import fr.upem.android.deadhal.maze.Room;
 
@@ -93,6 +94,17 @@ public class MazeBuilder
     }
 
     /**
+     * Adds a new interest to a room
+     * 
+     * @param room The room to add to
+     * @param interest The interest to add
+     */
+    public static void newInterest(Room room, Interest interest)
+    {
+        room.setInterest(interest);
+    }
+ 
+   /**
      * Instantiates a new room
      * 
      * @param id The id of the room

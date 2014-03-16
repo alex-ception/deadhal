@@ -34,7 +34,7 @@
         <activity
             android:name="fr.upem.android.deadhal.GameActivity"
             android:label="@string/title_activity_game"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             >
         </activity>
     </application>
