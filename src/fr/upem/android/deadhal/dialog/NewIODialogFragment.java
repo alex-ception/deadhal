@@ -24,14 +24,28 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 @SuppressLint("DefaultLocale")
+/**
+ * A class representing a dialog for a new IO
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class NewIODialogFragment extends DialogFragment
 {
+    /**
+     * An interface representing the contract to follow for the listener
+     */
     public interface NewIODialogListener
     {
         public void onDialogPositiveClick(NewIODialogFragment dialog, Room from, int directionFrom, Room to, int directionTo, boolean twoWay);
         public void onDialogNegativeClick(NewIODialogFragment dialog);
     }
 
+    /**
+     * 
+     */
     private NewIODialogListener listener;
 
     /**
@@ -105,6 +119,12 @@ public class NewIODialogFragment extends DialogFragment
         }
     }
 
+    /**
+     * Fills a spinner
+     * 
+     * @param spinner The spinner to fill
+     * @param values The values to fill with
+     */
     private void fillSpinner(Spinner spinner, Collection<String> values)
     {
         ArrayList<String> valuesAL = new ArrayList<String>();
@@ -118,6 +138,11 @@ public class NewIODialogFragment extends DialogFragment
         spinner.setAdapter(adapter);
     }
 
+    /**
+     * Fills the directions spinners
+     * 
+     * @param spinner The spinner to fill
+     */
     private void fillDirection(Spinner spinner)
     {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(

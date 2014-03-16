@@ -9,15 +9,33 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 
+/**
+ * A class representing a dialog for saving a maze
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class SaveDialogFragment extends DialogFragment
 {
+    /**
+     * An interface representing the contract to follow for the listener
+     */
     public interface SaveDialogListener
     {
         public void onDialogPositiveClick(SaveDialogFragment dialog, String levelName);
         public void onDialogNegativeClick(SaveDialogFragment dialog);
     }
 
+    /**
+     * 
+     */
     private SaveDialogListener listener;
+
+    /**
+     * 
+     */
     private EditText levelName;
 
     /**

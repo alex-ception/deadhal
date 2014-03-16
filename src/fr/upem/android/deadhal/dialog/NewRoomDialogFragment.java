@@ -9,15 +9,33 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
 
+/**
+ * A class representing a dialog for a new room
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class NewRoomDialogFragment extends DialogFragment
 {
+    /**
+     * An interface representing the contract to follow for the listener
+     */
     public interface NewRoomDialogListener
     {
         public void onDialogPositiveClick(NewRoomDialogFragment dialog, String roomName);
         public void onDialogNegativeClick(NewRoomDialogFragment dialog);
     }
 
+    /**
+     * 
+     */
     private NewRoomDialogListener listener;
+
+    /**
+     * 
+     */
     private EditText roomName;
 
     /**

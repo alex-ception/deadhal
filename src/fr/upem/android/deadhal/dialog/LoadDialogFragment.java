@@ -11,15 +11,33 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+/**
+ * A class representing a dialog for loading a maze
+ * 
+ * @author Alexandre ANDRE
+ * @author Dylan BANCE
+ * @author Remy BARBOSA
+ * @author Houmam WEHBEH
+ */
 public class LoadDialogFragment extends DialogFragment
 {
+    /**
+     * An interface representing the contract to follow for the listener
+     */
     public interface LoadDialogListener
     {
         public void onDialogPositiveClick(LoadDialogFragment dialog, String levelName) throws FileNotFoundException, IOException;
         public void onDialogNegativeClick(LoadDialogFragment dialog);
     }
 
+    /**
+     * 
+     */
     private String[] files;
+
+    /**
+     * 
+     */
     private LoadDialogListener listener;
 
     /**
