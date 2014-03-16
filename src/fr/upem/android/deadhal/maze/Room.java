@@ -287,4 +287,19 @@ public class Room
 	{
 		this.occuped = occuped;
 	}
+	
+	/**
+     * {@inheritDoc}
+     */
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("[ROOM] ==> ");
+		s.append("[");
+		s.append(getId());
+		s.append(",");
+		s.append(getName());
+		s.append("]");
+		return s.toString();
+	}
 }

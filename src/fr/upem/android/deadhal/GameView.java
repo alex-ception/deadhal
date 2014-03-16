@@ -3,11 +3,17 @@ package fr.upem.android.deadhal;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -28,7 +34,8 @@ import fr.upem.android.deadhal.utils.Rooms;
  * @author Houmam WEHBEH
  */
 @SuppressLint({ "WrongCall", "ViewConstructor" })
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback,
+		SensorEventListener {
 	private static final int INVALID_POINTER_ID = -1;
 	private Bitmap bm = BitmapFactory.decodeResource(getResources(),
 			R.drawable.yoshi);
@@ -46,6 +53,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mLastTouchY;
 	private int mActivePointerId = INVALID_POINTER_ID;
 	private ScaleGestureDetector mScaleDetector;
+	private SensorManager mSensorManager;
+	private Sensor mSensor;
 
 	/**
 	 * Class constructor
@@ -63,6 +72,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				new ScaleListener());
 
 		this.maze = gameActivity.getMaze();
+		mSensorManager = (SensorManager) gameActivity
+				.getSystemService(Context.SENSOR_SERVICE);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mSensorManager.registerListener(this, mSensor,
+				SensorManager.SENSOR_DELAY_UI);
 	}
 
 	/**
@@ -145,7 +159,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	 *            The selected room
 	 */
 	private void moveTo(Room selectedRoom2) {
-		if (selectedRoom != null) {
+		if (selectedRoom2 != null) {
+			selectedRoom = selectedRoom2;
 			for (Room r : maze.getRooms().values()) {
 				if (r.isOccuped()) {
 					if (wayIsGood(r, selectedRoom2)) {
@@ -402,6 +417,64 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				r.setY((int) (r.getY() * percentScale));
 			}
 			beginSpan = endSpan;
+		}
+	}
+
+	/**
+     * {@inheritDoc}
+     */
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// do nothing
+
+	}
+
+	/**
+     * {@inheritDoc}
+     */
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (selectedRoom != null) {
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				if ((Math.abs(event.values[0])) > (Math.abs(event.values[1]))
+						&& (Math.abs(event.values[0])) > 8) {
+					if (event.values[0] > 0) {
+						Log.e("west",""+ (event.values[0]));
+						ArrayList<LinkedRoom> west = selectedRoom.getOutputs().getWest();
+						if (west.size()>0){
+							moveTo(west.get(0)
+									.getRoom());
+						}
+					} else {
+						Log.e("east",""+ (event.values[0]));
+						ArrayList<LinkedRoom> east = selectedRoom.getOutputs().getEast();
+						if (east.size()>0){
+							moveTo(east.get(0)
+									.getRoom());
+						}
+
+					}
+				} else if ((Math.abs(event.values[1])) > 8) {
+					if (event.values[1] > 1) {
+						Log.e("south",""+ (event.values[1]));
+						ArrayList<LinkedRoom> south = selectedRoom.getOutputs().getSouth();
+						if (south.size()>0){
+							Log.e("south",""+ south.get(0)
+									.getRoom());
+							moveTo(south.get(0)
+									.getRoom());
+						}
+					} else {
+						Log.e("nrth",""+ (event.values[1]));
+						ArrayList<LinkedRoom> north = selectedRoom.getOutputs().getNorth();
+						if (north.size()>0){
+							moveTo(north.get(0)
+									.getRoom());
+						}
+
+					}
+				}
+			}
 		}
 	}
 }
